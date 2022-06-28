@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>Books</title>
+</head>
+<body>
+<p th:text="${errorMessage}"></p>
+<span th:if="${!hideTable}">
+<table>List Of Books
+    <thead>
+<tr>
+    <td>Id</td>
+    <td>Name</td>
+    <td>Author</td>
+    <td>Year of Publication</td>
+    <td>Checkout</td>
+</tr>
+    <thead>
+    <tbody>
+    <tr th:each="b: ${book}">
+        <td th:text="${b.id}"></td>
+        <td th:text="${b.name}"></td>
+        <td th:text="${b.author}"></td>
+        <td th:text="${b.yearOfPublish}"></td>
+        <td><a th:href="@{/api/v1/checkout/{id}(id=${b.id})}">CheckOut</a></td>
+    </tr>
+    </tbody>
+</table>
+</span>
+</body>
+</html>
