@@ -14,7 +14,7 @@ public class BibliotecaApplication {
 		SpringApplication.run(BibliotecaApplication.class, args);
 	}
 
-	@Bean
+	/*@Bean
 	public CommandLineRunner setUp(BooksRepository repository) {
 		return (args) -> {
 			Book book1 = new Book("Northanger Abbey", "Austen, Jane","General",1, true,1814);
@@ -23,5 +23,5 @@ public class BibliotecaApplication {
 			repository.save(book2);
 
 		};
-	}
+	}*/
 }
