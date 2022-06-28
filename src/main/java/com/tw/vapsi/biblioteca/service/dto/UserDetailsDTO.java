@@ -27,6 +27,8 @@ public class UserDetailsDTO implements UserDetails {
         this.authorities = authorities;
     }
 
+
+
     public static UserDetails create(User user) {
 
         return new UserDetailsDTO(user.getEmail(), user.getPassword(), simpleGrantedAuthorities);

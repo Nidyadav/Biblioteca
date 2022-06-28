@@ -2,12 +2,16 @@ package com.tw.vapsi.biblioteca.controller;
 
 import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.tw.vapsi.biblioteca.service.dto.UserDetailsDTO;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/users")
 public class UserController {
 
@@ -17,12 +21,20 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @PostMapping
     public User createUser(@RequestParam String firstName,
                            @RequestParam String lastName,
                            @RequestParam String email,
                            @RequestParam String password) {
         return userService.save(firstName, lastName, email, password);
+    }
+
+
+    @PostMapping("/login")
+    public String loginUser(@ModelAttribute("user") User user, BindingResult result) throws UsernameNotFoundException, BadCredentialsException {
+        UserDetails userDetails = userService.login(user.getEmail(),user.getPassword());
+        return "index";
     }
 
 }

@@ -7,10 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -114,5 +121,23 @@ class UserControllerTest extends ControllerTestHelper {
 
     private String createReasonFor(String parameterName) {
         return "Required request parameter '" + parameterName + "' for method parameter type String is not present";
+    }
+
+
+    @Test
+    void shouldLoginValidUser() throws Exception {
+        userService.login("abc@gmail.com","abcd");
+        UserDetails userInfo = userService.loadUserByUsername("abc@gmail.com");
+        when(userService.login("abc@gmail.com","abcd")).thenReturn(userInfo);
+
+        mockMvc.perform(get("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("userName", "abc@gmail.com")
+                        .param("password", "abcd")
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userName").value("abc@gmail.com"))
+                .andExpect(jsonPath("$.password").value("abcd"));
+        verify(userService, times(1)).login("abc@gmail.com","abcd");
     }
 }
