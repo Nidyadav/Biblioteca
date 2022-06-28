@@ -4,8 +4,8 @@
     <title>Thought Works</title>
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div th:if="${error}">
+    <p th:text="${error}"></p>
 </div>
 <div th:if="${param.logout}">
     You have been logged out.
