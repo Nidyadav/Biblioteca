@@ -13,13 +13,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/v1")
+@RequestMapping("/books")
 public class BooksController {
 
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/books")
+    @GetMapping("/list")
     public String books(Model model) {
         List<Book> book = bookService.getBooks();
         if (book.isEmpty()) {

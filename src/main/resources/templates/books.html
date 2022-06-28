@@ -23,7 +23,7 @@
         <td th:text="${b.name}"></td>
         <td th:text="${b.author}"></td>
         <td th:text="${b.yearOfPublish}"></td>
-        <td><a th:href="@{/api/v1/checkout/{id}(id=${b.id})}">CheckOut</a></td>
+        <td><a th:href="@{/books/checkout/{id}(id=${b.id})}">CheckOut</a></td>
     </tr>
     </tbody>
 </table>

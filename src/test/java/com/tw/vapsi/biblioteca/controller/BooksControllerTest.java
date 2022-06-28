@@ -36,13 +36,13 @@ class BooksControllerTest extends ControllerTestHelper {
                 new Book("War and Peace", "Tolstoy, Leo", "General",1, true,1865),
                 new Book("Northanger Abbey", "Austen, Jane","General",1, true,1814));
         when(bookService.getBooks()).thenReturn(listOfBooks);
-        mockMvc.perform(get("/api/v1/books")).andExpect(status().isOk());
+        mockMvc.perform(get("/books/list")).andExpect(status().isOk());
 
         verify(bookService,times(1)).getBooks();
     }
 
     @Test
     void shouldRedirectToCheckOutPage() throws Exception {
-        mockMvc.perform(get("/api/v1/checkout/1")).andExpect(status().isOk());
+        mockMvc.perform(get("/books/checkout/1")).andExpect(status().isOk());
     }
 }
