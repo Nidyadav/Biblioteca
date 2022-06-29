@@ -2,6 +2,7 @@ package com.tw.vapsi.biblioteca.service;
 
 import com.tw.vapsi.biblioteca.model.Book;
 import com.tw.vapsi.biblioteca.repository.BooksRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,11 @@ class BookServiceTest {
 
     @MockBean
     private BooksRepository booksRepository;
+
+    @BeforeEach
+    void setUp () {
+
+    }
 
     @Test
     void shouldReturnListOfBooks() throws Exception {
