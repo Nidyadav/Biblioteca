@@ -25,9 +25,9 @@ jobs:
       - image: circleci/openjdk:8-jdk
     steps:
       - checkout
-          - run: ./gradlew bootJar
-          - persist_to_workspace:
-              root: ./
-              paths:
-                - build/
-                - .gradle/
+      - run: ./gradlew bootJar
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - build/
+            - .gradle/

@@ -21,7 +21,6 @@ class BookServiceTest {
     @MockBean
     private BooksRepository booksRepository;
 
-
     @Test
     void shouldReturnListOfBooks () throws Exception {
         List<Book> listOfBooks = Arrays.asList (
