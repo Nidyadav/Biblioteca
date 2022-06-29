@@ -7,7 +7,7 @@
 <body>
 <p th:text="${errorMessage}"></p>
 <span th:if="${!hideTable}">
-<table>List Of Books
+<table border="1">List Of Books
     <thead>
 <tr>
     <td>Id</td>
@@ -27,7 +27,11 @@
     </tr>
     </tbody>
 </table>
+    </br>
     <a th:href="@{/login}">Login</a>
+
 </span>
+</br>
+<a th:href="@{/books/create}">Add Book</a>
 </body>
 </html>

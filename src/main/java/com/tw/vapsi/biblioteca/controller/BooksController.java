@@ -1,14 +1,14 @@
 package com.tw.vapsi.biblioteca.controller;
 
+import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.model.Book;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,13 +21,14 @@ public class BooksController {
 
     @GetMapping("/list")
     public String books(Model model) {
-        List<Book> book = bookService.getBooks();
-        if (book.isEmpty()) {
-            model.addAttribute("errorMessage","No Books Available in Library");
-            model.addAttribute("hideTable","true");
-        } else {
+        List<Book> book = new ArrayList<>();
+        try {
+            book = bookService.getBooks();
             model.addAttribute("book",book);
             model.addAttribute("hideTable","false");
+        } catch (NoBooksAvailableException noBooksAvailableException) {
+            model.addAttribute("errorMessage",noBooksAvailableException.getMessage());
+            model.addAttribute("hideTable","true");
         }
         return "books";
     }
@@ -36,5 +37,26 @@ public class BooksController {
     public String checkOut(Model model) {
         model.addAttribute("errorMessage","Log in to Continue");
         return "checkout";
+    }
+
+    @GetMapping("/create")
+    public String goToCreatePage(Model model) {
+        model.addAttribute("book",new Book());
+        return "createbooks";
+    }
+
+    @PostMapping("/save")
+    public String createBooks(@ModelAttribute("book") Book book,Model model) {
+
+        try {
+            bookService.createBook(book);
+            List<Book> books = bookService.getBooks();
+            model.addAttribute("book",books);
+            model.addAttribute("hideTable","false");
+        } catch (NoBooksAvailableException noBooksAvailableException) {
+            model.addAttribute("errorMessage",noBooksAvailableException.getMessage());
+            model.addAttribute("hideTable","true");
+        }
+        return "books";
     }
 }

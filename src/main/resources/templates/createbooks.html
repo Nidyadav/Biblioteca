@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Save Book</title>
+</head>
+<body>
+<p th:text="${bookCreated}"></p>
+<form th:action="@{/books/save}"  th:object="${book}" method="post">
+    Book Name: <input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
+    Author: <input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
+    Genere: <input id="bookGenere" type="text" th:field="*{genere}" value=" "/><br/>
+    Year Of Publishing: <input id="bookYear" type="number" th:field="*{yearOfPublish}" value=" "/><br/>
+    <input type="submit" value="Submit"/>
+</form>
+<a th:href="@{/books/list}">List Books</a>
+</body>
+</html>
