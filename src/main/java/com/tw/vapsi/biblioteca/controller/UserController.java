@@ -9,12 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController {
 
@@ -32,21 +29,4 @@ public class UserController {
                            @RequestParam String password) {
         return userService.save(firstName, lastName, email, password);
     }
-
-
-    @PostMapping("/login")
-    public String loginUser(@ModelAttribute("user") User user, Model model){
-        try {
-            UserDetails userDetails = userService.login(user.getEmail(), user.getPassword());
-            model.addAttribute("userDetails",userDetails);
-            return "index";
-        }catch(UsernameNotFoundException ex){
-            model.addAttribute("error",ex.getMessage());
-            return "login";
-        }catch (BadCredentialsException ex){
-            model.addAttribute("error",ex.getMessage());
-            return "login";
-        }
-    }
-
 }

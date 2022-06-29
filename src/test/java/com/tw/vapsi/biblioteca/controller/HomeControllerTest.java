@@ -19,13 +19,9 @@ class HomeControllerTest extends ControllerTestHelper {
 
     @Test
     void shouldShowWelcomeMessage() throws Exception {
-        String expectedResponseContent = "Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!";
-        String actualResponseContent = mockMvc.perform(get("/").contentType("application/json"))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk());
 
-        assertEquals(expectedResponseContent, actualResponseContent);
+
     }
 }

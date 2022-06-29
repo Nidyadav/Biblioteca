@@ -26,6 +26,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username){
             Optional<User> user = userRepository.findByEmail(username);
             if(!user.isPresent()){
+                System.out.println("Inside Login User ccccc");
                 throw new UsernameNotFoundException(String.format("No user exists with username : %s", username));
             }
             return user.map(UserDetailsDTO::create).get();
@@ -35,13 +36,5 @@ public class UserService implements UserDetailsService {
         String encodePassword = bCryptPasswordEncoder.encode(password);
         User user = new User(firstName, lastName, email, encodePassword);
         return userRepository.save(user);
-    }
-
-    public UserDetails login(String userName,String password) throws UsernameNotFoundException,BadCredentialsException{
-        UserDetails user = loadUserByUsername(userName);
-        if(!user.getPassword().equals(password)) {
-           throw new BadCredentialsException(String.format("Invalid Password"));
-        }
-        return user;
     }
 }
