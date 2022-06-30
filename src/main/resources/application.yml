@@ -8,3 +8,7 @@ spring:
   h2:
     console:
       enabled: true
+      settings:
+        web-allow: true
+ server:
+   port: ${PORT:8080}

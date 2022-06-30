@@ -1,12 +1,16 @@
 
 version: 2.1
-
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      - test
+      - test:
+         requires:
+         -build
+      -deployToStage:
+         requires:
+         -test
 
 jobs:
   build:
@@ -30,3 +34,22 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports
+
+  deployToStage:
+    docker:  #executor: type
+        - image: cimg/base:stable
+      steps:
+        - checkout
+        - setup_remote_docker:
+            version: 20.10.14
+        - attach_workspace:
+            at: ./
+        - run: docker build -f Dockerfile . -t teama
+        - run:
+            name: Build and push Docker image to Heroku
+            command: |
+              set -x
+              sudo curl https://cli-assets.heroku.com/install.sh | sh
+              HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+              HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateama-stage web
+              HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateama-stage web
