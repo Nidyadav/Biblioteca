@@ -1,6 +1,8 @@
 spring:
   datasource:
     url: jdbc:h2:mem:bibliotecadb
+    username : sa
+    password : pa
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
@@ -10,5 +12,5 @@ spring:
       enabled: true
       settings:
         web-allow: true
- server:
+server:
    port: ${PORT:8080}
