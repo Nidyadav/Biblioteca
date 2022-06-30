@@ -37,7 +37,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionNoBookAvailable() {
+    void shouldThrowExceptionWhenNoBookIsAvailable() {
         List<Book> listOfBooks = new ArrayList<>();
         when(booksRepository.findAll()).thenReturn(listOfBooks);
 
