@@ -40,8 +40,8 @@ jobs:
         - image: circleci/openjdk:8-jdk
     steps:
         - checkout
-#        - setup_remote_docker:
-#            version: 20.10.14
+        - setup_remote_docker:
+            version: 20.10.14
         - attach_workspace:
             at: ./
 #        - run: docker build -f Dockerfile . -t teama
