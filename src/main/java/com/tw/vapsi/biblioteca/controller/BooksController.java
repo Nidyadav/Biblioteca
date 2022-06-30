@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,23 +20,23 @@ public class BooksController {
     @Autowired
     private BookService bookService;
 
+    private static final String ERROR_MESSAGE = "errorMessage";
+
     @GetMapping("/list")
     public String books(Model model) {
-        List<Book> book = new ArrayList<>();
+        List<Book> book;
         try {
             book = bookService.getBooks();
             model.addAttribute("book",book);
-            model.addAttribute("hideTable","false");
         } catch (NoBooksAvailableException noBooksAvailableException) {
-            model.addAttribute("errorMessage",noBooksAvailableException.getMessage());
-            model.addAttribute("hideTable","true");
+            model.addAttribute(ERROR_MESSAGE,noBooksAvailableException.getMessage());
         }
         return "books";
     }
 
     @GetMapping("/checkout/{id}")
     public String checkOut(Model model) {
-        model.addAttribute("errorMessage","Log in to Continue");
+        model.addAttribute(ERROR_MESSAGE,"Log in to Continue");
         return "checkout";
     }
 
@@ -54,10 +53,8 @@ public class BooksController {
             bookService.createBook(book);
             List<Book> books = bookService.getBooks();
             model.addAttribute("book",books);
-            model.addAttribute("hideTable","false");
         } catch (NoBooksAvailableException noBooksAvailableException) {
-            model.addAttribute("errorMessage",noBooksAvailableException.getMessage());
-            model.addAttribute("hideTable","true");
+            model.addAttribute(ERROR_MESSAGE,noBooksAvailableException.getMessage());
         }
         return "books";
     }

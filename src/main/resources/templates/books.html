@@ -6,7 +6,7 @@
 </head>
 <body>
 <p th:text="${errorMessage}"></p>
-<span th:if="${!hideTable}">
+<span th:if="${book != null}">
 <table border="1">List Of Books
     <thead>
 <tr>
