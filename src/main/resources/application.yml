@@ -1,16 +1,15 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:bibliotecadb
-    username : sa
-    password : pa
+    url: jdbc:postgresql://ec2-18-204-142-254.compute-1.amazonaws.com:5432/deaijgv144vrat
+    username: xkxhsdqjbzgcpa
+    password: f45bfcf83320bbcdc55e81304c2a9e07a3613c04857726d709144b2a87030d24
+    hikari:
+      schema: public
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
-      ddl-auto: update
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow: true
-server:
-   port: ${PORT:8080}
+      ddl-auto: none
+
+  flyway:
+    schemas: public
+    locations: classpath:db/migration
+

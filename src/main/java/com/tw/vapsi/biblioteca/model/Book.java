@@ -7,7 +7,7 @@ import java.util.Objects;
 @Table(name = "books")
 public class Book {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
@@ -18,14 +18,16 @@ public class Book {
 
     private int quantity;
 
+    @Column(name="isavailable")
     private boolean isAvailable;
 
-    private long yearOfPublish;
+    @Column(name="yearofpublish")
+    private int yearOfPublish;
 
     public Book() {
     }
 
-    public Book(String name, String author, String genere, int quantity, boolean isAvailable, long yearOfPublish) {
+    public Book(String name, String author, String genere, int quantity, boolean isAvailable, int yearOfPublish) {
         this.name = name;
         this.author = author;
         this.genere = genere;
@@ -95,11 +97,11 @@ public class Book {
         isAvailable = available;
     }
 
-    public long getYearOfPublish() {
+    public int getYearOfPublish() {
         return yearOfPublish;
     }
 
-    public void setYearOfPublish(long yearOfPublish) {
+    public void setYearOfPublish(int yearOfPublish) {
         this.yearOfPublish = yearOfPublish;
     }
 }

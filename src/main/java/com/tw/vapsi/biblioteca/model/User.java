@@ -14,6 +14,8 @@ public class User {
     private String email;
     private String password;
 
+    private String usertype = "ROLE_USER";
+
     public User(long id, String firstName, String lastName, String email, String password) {
 
         this.id = id;
@@ -21,6 +23,16 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public User(long id, String firstName, String lastName, String email, String password, String usertype) {
+
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.usertype = usertype;
     }
 
     public User() {
@@ -63,12 +75,19 @@ public class User {
         return email;
     }
 
+    public String getUsertype() {
+        return usertype;
+    }
     public void setEmail(String email) {
         this.email = email;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setUsertype(String usertype) {
+        this.usertype = usertype;
     }
 
     public void setPassword(String password) {
