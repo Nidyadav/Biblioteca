@@ -3,7 +3,6 @@ package com.tw.vapsi.biblioteca.configuration;
 import com.tw.vapsi.biblioteca.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,7 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/books").authenticated()
+                .antMatchers("/books/create").hasAnyAuthority("LIBRARIAN")
+                .antMatchers("/books/save").hasAnyAuthority("LIBRARIAN")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

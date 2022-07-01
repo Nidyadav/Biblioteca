@@ -5,20 +5,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class UserDetailsDTO implements UserDetails {
 
     private final String userName;
     private final String password;
     private final List<SimpleGrantedAuthority> authorities;
-    private static final List<SimpleGrantedAuthority> simpleGrantedAuthorities = Arrays.asList(
-            new SimpleGrantedAuthority("ROLE_USER"),
-            new SimpleGrantedAuthority("ROLE_LIBRARIAN")
-    );
 
     public UserDetailsDTO(String userName, String password, List<SimpleGrantedAuthority> authorities) {
 
@@ -30,6 +23,8 @@ public class UserDetailsDTO implements UserDetails {
 
 
     public static UserDetails create(User user) {
+        List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+             simpleGrantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
 
         return new UserDetailsDTO(user.getEmail(), user.getPassword(), simpleGrantedAuthorities);
     }

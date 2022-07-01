@@ -1,0 +1,1 @@
+UPDATE users set password='$2a$10$sJeDOi9FiRCgs9QpF.IqceqN9NB3Q4WOZnWJMG2rAfU7V6RnXQ7ou' where email = 'raaji@gmail.com';

@@ -14,7 +14,8 @@ public class Book {
 
     private String author;
 
-    private String genere;
+    @Column(name="genere")
+    private String genre;
 
     private int quantity;
 
@@ -30,7 +31,7 @@ public class Book {
     public Book(String name, String author, String genere, int quantity, boolean isAvailable, int yearOfPublish) {
         this.name = name;
         this.author = author;
-        this.genere = genere;
+        this.genre = genere;
         this.quantity = quantity;
         this.isAvailable = isAvailable;
         this.yearOfPublish = yearOfPublish;
@@ -41,12 +42,12 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id && quantity == book.quantity && isAvailable == book.isAvailable && yearOfPublish == book.yearOfPublish && name.equals(book.name) && author.equals(book.author) && Objects.equals(genere, book.genere);
+        return id == book.id && quantity == book.quantity && isAvailable == book.isAvailable && yearOfPublish == book.yearOfPublish && name.equals(book.name) && author.equals(book.author) && Objects.equals(genre, book.genre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, author, genere, quantity, isAvailable, yearOfPublish);
+        return Objects.hash(id, name, author, genre, quantity, isAvailable, yearOfPublish);
     }
 
     public long getId() {
@@ -73,12 +74,12 @@ public class Book {
         this.author = author;
     }
 
-    public String getGenere() {
-        return genere;
+    public String getGenre() {
+        return genre;
     }
 
-    public void setGenere(String genere) {
-        this.genere = genere;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public int getQuantity() {

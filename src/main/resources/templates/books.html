@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <title>Books</title>
@@ -27,11 +29,13 @@
     </tr>
     </tbody>
 </table>
-    </br>
-    <a th:href="@{/login}">Login</a>
+
 
 </span>
-</br>
-<a th:href="@{/books/create}">Add Book</a>
+<div sec:authorize="hasAnyAuthority('LIBRARIAN')">
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
+</div>
+<a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+<a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
 </body>
 </html>

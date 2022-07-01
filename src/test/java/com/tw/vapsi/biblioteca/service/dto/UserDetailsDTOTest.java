@@ -18,11 +18,11 @@ class UserDetailsDTOTest {
                 "User 1 first name",
                 "User 1 last name",
                 "email@example.com",
-                "password");
+                "password",
+                "USER");
         UserDetails userDetails = UserDetailsDTO.create(user);
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = Arrays.asList(
-                new SimpleGrantedAuthority("ROLE_USER"),
-                new SimpleGrantedAuthority("ROLE_LIBRARIAN")
+                new SimpleGrantedAuthority("USER")
         );
 
         assertEquals("email@example.com", userDetails.getUsername());

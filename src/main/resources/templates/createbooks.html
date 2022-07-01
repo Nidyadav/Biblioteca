@@ -5,12 +5,17 @@
     <title>Save Book</title>
 </head>
 <body>
-<p th:text="${bookCreated}"></p>
+<strong>Create Book</strong>
 <form th:action="@{/books/save}"  th:object="${book}" method="post">
+    <p th:text="${nameErrorMessage}" style="color:red"></p>
     Book Name: <input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
+    <p th:text="${authorErrorMessage}" style="color:red"></p>
     Author: <input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
-    Genere: <input id="bookGenere" type="text" th:field="*{genere}" value=" "/><br/>
-    Year Of Publishing: <input id="bookYear" type="number" th:field="*{yearOfPublish}" value=" "/><br/>
+    <p th:text="${genreErrorMessage}" style="color:red"></p>
+    Genre: <input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
+    <p th:text="${yearOfPublishErrorMessage}" style="color:red"></p>
+    Year Of Publishing: <input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}" value=" "/><br/>
+    <p></p>
     <input type="submit" value="Submit"/>
 </form>
 <a th:href="@{/books/list}">List Books</a>
