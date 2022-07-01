@@ -13,3 +13,5 @@ spring:
     schemas: public
     locations: classpath:db/migration
 
+server:
+  port: ${PORT:8080}
