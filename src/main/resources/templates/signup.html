@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <style>
     {
@@ -14,7 +14,7 @@
 }
 
 input[type=text], select, textarea {
-  width: 30%;
+  width: 40%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -40,7 +40,7 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
-  background-color: #45a049;
+  background-color: #1abc9c;
 }
 
 .container {
@@ -77,37 +77,36 @@ input[type=submit]:hover {
 }
 
 </style>
-
-    <title>Thought Works</title>
+    <meta charset="ISO-8859-1">
+    <title>Signup</title>
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-
-<div>
-    <p th:text="${errorMessage}"></p>
-</div>
-
 <div align="center">
     <div class="header">
-        <h1>User Login</h1>
+        <h1>User Registration</h1>
         <p></p>
     </div>
+    <form action="#" th:action="@{addUser}" th:object="${user}" method="post" >
+        <br/><br/>
+        <p th:text="${firstnameErrorMessage}" ></p>
+        <label> First Name   </label>
+        <input type="text" th:field="*{firstName}" id=firstName placeholder="First Name" /><br/><br/>
 
-<form th:action="@{/login}" method="post">
-<br/><br/>
-    <label>Username   </label>
-    <input type="text" placeholder="Username" name="username"/><br/><br/>
+        <p th:text="${lastnameErrorMessage}" ></p>
+        <label>Last Name   </label>
+        <input type="text" th:field="*{lastName}" placeholder="Last Name"/><br/><br/>
 
-    <label> Password  </label>
-    <input type="text" name="password" placeholder="Password"/><br/><br/>
+        <p th:text="${emailErrorMessage}" ></p>
+        <label >Email Id    </label>
+        <input type="text" th:field="*{email}" placeholder="Email Id"/><br/><br/>
 
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+        <p th:text="${passwordErrorMessage}" ></p>
+        <label>Password     </label>
+        <input type="text" th:field="*{password}" placeholder="Password"/><br/><br/><br/><br/>
+
+
+        <input type="submit" value="Register" />
+    </form>
 </div>
 </body>
 </html>
