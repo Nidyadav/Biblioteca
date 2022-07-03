@@ -3,21 +3,41 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>Books</title>
+    <style>
+    table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+    background-color: #1abc9c;
+    color: white;
+    }
+
+    </style>
+    <meta charset="UTF-8">
+    <title>Books</title>
+
 </head>
 <body>
 <p th:text="${successCheckoutMessage}"></p>
 <p th:text="${errorMessage}"></p>
 <span th:if="${book != null}">
-<table border="1">List Of Books
+    <table border="1"><h2>List Of Books</h2>
     <thead>
 <tr>
-    <td>Id</td>
-    <td>Name</td>
-    <td>Author</td>
-    <td>Year of Publication</td>
-    <td>Checkout</td>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Author</th>
+    <th>Year of Publication</th>
+    <th>Checkout</th>
 </tr>
     <thead>
     <tbody>

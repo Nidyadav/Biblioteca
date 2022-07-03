@@ -20,6 +20,14 @@ input[type=text], select, textarea {
   border-radius: 4px;
   resize: vertical;
 }
+input[type=password], select, textarea {
+  width: 30%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
 
 label {
   font-family: Arial, Helvetica, sans-serif;
@@ -99,13 +107,13 @@ input[type=submit]:hover {
         <p></p>
     </div>
 
+
     <form th:action="@{/login}" method="post">
         <br/><br/>
         <label>Username </label>
         <input type="text" placeholder="Username" name="username"/><br/><br/>
-
-        <label> Password </label>
-        <input type="text" name="password" placeholder="Password"/><br/><br/>
+    <label> Password  </label>
+    <input type="password" name="password" placeholder="Password"/><br/><br/>
 
         <div><input type="submit" value="Sign In"/></div>
     </form>

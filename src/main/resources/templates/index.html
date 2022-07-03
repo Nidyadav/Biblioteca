@@ -68,23 +68,52 @@ input[type=text], select, textarea {
   width: 75%;
   margin-top: 6px;
 }
-</style>
+/* Container holding the image and the text */
+.containerImage {
+  position: relative;
+}
+
+/* Bottom right text */
+.text-block {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: black;
+  color: white;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+
+    </style>
 </head>
 <body>
-<div class="header">
-    <img th:src="@{/images/libarary4.webp}" style="width:1600px;height:250px" alt="Welcome image" />
+<!--<div class="header">-->
+<!--    <img  th:src="@{/images/libarary4.webp}" style="width:1600px;height:250px" alt="Welcome image"/>-->
+<!--        <div class="top-right">Biblioteca</div>-->
+<!--</div>-->
+<div class="containerImage">
+    <img th:src="@{/images/libarary4.webp}" style="width:1600px;height:250px" alt="Welcome image"/>
+    <div class="text-block">
+        <h4>Biblioteca
+        </h4>
+    </div>
 </div>
 
 <div class="topnav">
     <a th:href="@{/books/list}">List Books</a>
-    <a sec:authorize="!isAuthenticated()"th:href="@{/login}" style="float:right">Login</a>
-    <a sec:authorize="isAuthenticated()"th:href="@{/logout}" style="float:right">Logout</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
     <a th:href="@{/signup}" style="float:right">Signup</a>
 </div>
 
 <div type="text">
-    <div></div>
-    <h1 text="&nbsp     " th:text="${welcomeMessage}"  ></h1>
+
+
+    <h1 th:styleappend="'text-align:center;'">
+        <span th:text="${welcomeMessage}"></span>
+    </h1>
 </div>
 
 </body>
