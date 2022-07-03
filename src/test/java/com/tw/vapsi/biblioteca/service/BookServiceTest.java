@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,22 +29,22 @@ class BookServiceTest {
         List<Book> listOfBooks = Arrays.asList(
                 new Book("War and Peace", "Tolstoy, Leo", "General",1, true,1865),
                 new Book("Northanger Abbey", "Austen, Jane","General",1, true,1814));
-        when(booksRepository.findAll()).thenReturn(listOfBooks);
+        when(booksRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(listOfBooks);
 
         List<Book> books = bookService.getBooks();
 
-        verify(booksRepository,times(1)).findAll();
+        verify(booksRepository,times(1)).findAll(Sort.by(Sort.Direction.ASC, "id"));
         assertEquals(listOfBooks,books);
     }
 
     @Test
     void shouldThrowExceptionWhenNoBookIsAvailable() {
         List<Book> listOfBooks = new ArrayList<>();
-        when(booksRepository.findAll()).thenReturn(listOfBooks);
+        when(booksRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))).thenReturn(listOfBooks);
 
         assertThrows(NoBooksAvailableException.class,()->bookService.getBooks());
 
-        verify(booksRepository,times(1)).findAll();
+        verify(booksRepository,times(1)).findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Test

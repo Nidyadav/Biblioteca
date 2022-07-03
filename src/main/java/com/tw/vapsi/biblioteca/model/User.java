@@ -1,14 +1,17 @@
 package com.tw.vapsi.biblioteca.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(name = "id")
+    private long user_id;
     @Column(name="firstname")
     private String firstName;
     @Column(name="lastname")
@@ -18,18 +21,39 @@ public class User {
 
     private String role = "USER";
 
-    public User(long id, String firstName, String lastName, String email, String password) {
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "borrowed_books", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    private Set<Book> books = new HashSet<>();
 
-        this.id = id;
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
+
+    public long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(long user_id) {
+        this.user_id = user_id;
+    }
+
+    public User(long user_id, String firstName, String lastName, String email, String password) {
+
+        this.user_id = user_id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public User(long id, String firstName, String lastName, String email, String password, String role) {
+    public User(long user_id, String firstName, String lastName, String email, String password, String role) {
 
-        this.id = id;
+        this.user_id = user_id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -50,11 +74,11 @@ public class User {
     }
 
     public long getId() {
-        return id;
+        return user_id;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.user_id = id;
     }
 
     public String getFirstName() {
@@ -101,7 +125,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        boolean areIdsEquals = id == user.id;
+        boolean areIdsEquals = user_id == user.user_id;
         boolean isFirstNameEqual = firstName.equals(user.firstName);
         boolean isLastNameEqual = lastName.equals(user.lastName);
         boolean isEmailEqual = email.equals(user.email);
@@ -111,6 +135,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password);
+        return Objects.hash(user_id, firstName, lastName, email, password);
     }
 }

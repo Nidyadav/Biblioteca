@@ -60,10 +60,11 @@ class BooksControllerTest extends ControllerTestHelper {
 
     @Test
     @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
-    void shouldRedirectToCheckOutPage() throws Exception {
+    void shouldRedirectToBooksPageWithErrorMessage() throws Exception {
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("checkout"));
+                .andExpect(MockMvcResultMatchers.view().name("books"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
     }
 
     @Test
@@ -94,6 +95,7 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(status().isOk());
         verify(bookService,times(1)).getBooks();
     }
+
     @Test
     @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
     void shouldThrowExceptionForInvalidAttributeToSaveBook() throws Exception {
@@ -109,5 +111,28 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("genreErrorMessage"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("yearOfPublishErrorMessage"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldRedirectToLoginIfUserIsNotLoggedIn() throws Exception {
+        mockMvc.perform(get("/books/checkout/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("login"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"USER"})
+    void shouldRedirectToBooksPageOnSuccessfulCheckout() throws Exception {
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
+        when(bookService.isBookAvailableForCheckout(1)).thenReturn(true);
+
+
+        mockMvc.perform(get("/books/checkout/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("successCheckoutMessage"))
+                .andExpect(MockMvcResultMatchers.view().name("books"));
+
+        verify(bookService, times(1)).checkOutBook(1,"admin");
     }
 }

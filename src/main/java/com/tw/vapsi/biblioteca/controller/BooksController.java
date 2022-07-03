@@ -5,12 +5,12 @@ import com.tw.vapsi.biblioteca.model.Book;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ public class BooksController {
     private BookService bookService;
 
     private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String SUCCESS_MESSAGE = "successCheckoutMessage";
 
     @GetMapping("/list")
     public String books(Model model) {
@@ -36,9 +37,23 @@ public class BooksController {
     }
 
     @GetMapping("/checkout/{id}")
-    public String checkOut(Model model) {
-        model.addAttribute(ERROR_MESSAGE, "Log in to Continue");
-        return "checkout";
+    public String checkOut(@PathVariable("id") long bookId, Model model) {
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+
+        if (loggedInUser instanceof AnonymousAuthenticationToken) {
+            model.addAttribute(ERROR_MESSAGE, "Log in to Continue...");
+            return ("login");
+        }
+
+        if (!bookService.isBookAvailableForCheckout(bookId)) {
+            model.addAttribute(ERROR_MESSAGE, "Book id: "+bookId+" Not Available For Checkout.");
+            return books(model);
+        }
+
+        bookService.checkOutBook(bookId, loggedInUser.getName());
+        model.addAttribute(SUCCESS_MESSAGE, "Book CheckedOut Successfully");
+
+        return books(model);
     }
 
     @PreAuthorize("hasRole('LIBRARIAN')")
