@@ -4,7 +4,6 @@ package com.tw.vapsi.biblioteca.controller;
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.model.Book;
-import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -82,7 +80,6 @@ class BooksControllerTest extends ControllerTestHelper {
     void shouldBeAbleToSaveTheBook() throws Exception {
         Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
                 "General",1, true,1865);
-        bookService.createBook(bookToBeAdded);
         List<Book> bookList = Collections.singletonList(bookToBeAdded);
         when(bookService.getBooks()).thenReturn(bookList);
 
@@ -113,21 +110,4 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("yearOfPublishErrorMessage"))
                 .andExpect(status().isOk());
     }
-//    @Test
-//    void shouldNotBeAbleToSaveTheBookWhenNotLoggedIn() throws Exception {
-//        Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
-//                "General",1, true,1865);
-//        bookService.createBook(bookToBeAdded);
-//        List<Book> bookList = Collections.singletonList(bookToBeAdded);
-//        when(bookService.getBooks()).thenReturn(bookList);
-//
-//        mockMvc.perform(post("/books/save")
-//                        .param("name","War and Peace")
-//                        .param("author","Tolstoy, Leo")
-//                        .param("genre","General")
-//                        .param("yearOfPublish","1865"))
-//                .andExpect(redirectedUrl("/login"))
-//                .andExpect(status().is(302));
-//    }
-
 }
