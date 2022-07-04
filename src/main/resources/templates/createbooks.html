@@ -3,21 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Save Book</title>
+    <style>
+    {
+  box-sizing: border-box;
+}
+.header {
+  padding: 10px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
+
+input[type=text],input[type=number], select, textarea {
+  width: 40%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+input[type=password], select, textarea {
+  width: 40%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+        width: 200px;
+        margin: 5px;
+        text-align: left;
+}
+
+input[type=submit] {
+  background-color: #1abc9c;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #1abc9c;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+</style>
 </head>
 <body>
-<strong>Create Book</strong>
-<form th:action="@{/books/save}"  th:object="${book}" method="post">
-    <p th:text="${nameErrorMessage}" style="color:red"></p>
-    Book Name: <input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
-    <p th:text="${authorErrorMessage}" style="color:red"></p>
-    Author: <input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
-    <p th:text="${genreErrorMessage}" style="color:red"></p>
-    Genre: <input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
-    <p th:text="${yearOfPublishErrorMessage}" style="color:red"></p>
-    Year Of Publishing: <input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}" value=" "/><br/>
-    <p></p>
-    <input type="submit" value="Submit"/>
-</form>
+<div align="center">
+    <div class="header">
+        <h1>Create Book</h1>
+        <p></p>
+    </div>
+    <form th:action="@{/books/save}"  th:object="${book}" method="post">
+        <p th:text="${nameErrorMessage}" style="color:red"></p>
+        Book Name: <input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
+        <p th:text="${authorErrorMessage}" style="color:red"></p>
+        Author: <input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
+        <p th:text="${genreErrorMessage}" style="color:red"></p>
+        Genre: <input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
+        <p th:text="${yearOfPublishErrorMessage}" style="color:red"></p>
+        Year Of Publishing: <input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}" value=" "/><br/>
+        <p></p>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
 <a th:href="@{/books/list}">List Books</a>
 </body>
 </html>
