@@ -1,6 +1,7 @@
 package com.tw.vapsi.biblioteca.controller;
 
 
+import com.tw.vapsi.biblioteca.exception.UserAlreadyExistsException;
 import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,18 @@ public class HomeController {
     }
 
     @PostMapping("/addUser")
-    public String saveUser(@ModelAttribute("user") User user, Model model)
-    {
+    public String saveUser(@ModelAttribute("user") User user, Model model) throws UserAlreadyExistsException {
         if(checkNewUserDetails(user,model)) {
-            user = userService.save(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
-            return "index";
-        }
+            try {
+                user = userService.save(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
+                return "index";
+            }
+            catch(UserAlreadyExistsException userAlreadyExistsException) {
+                     model.addAttribute("userAlreadyExistsErrorMessage",userAlreadyExistsException.getMessage());
+                     return "signup";
+            }
+            }
+
         return "signup";
     }
 

@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.UserAlreadyExistsException;
 import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.repository.UserRepository;
 import com.tw.vapsi.biblioteca.service.dto.UserDetailsDTO;
@@ -61,7 +62,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldSaveTheUserInformation() {
+    void shouldSaveTheUserInformation() throws UserAlreadyExistsException {
         User userToBeCreated = new User(
                 "Micky",
                 "Mouse",

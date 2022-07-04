@@ -77,6 +77,7 @@ class UserControllerTest extends ControllerTestHelper {
     @Test
     void shouldNotCreateUserWhenLastNameIsMissing() throws Exception {
 
+
         mockMvc.perform(post("/users")
                         .param("firstName", firstName)
                         .param("email", email)

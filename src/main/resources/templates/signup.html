@@ -89,6 +89,7 @@ input[type=submit]:hover {
     <form action="#" th:action="@{addUser}" th:object="${user}" method="post" >
         <br/><br/>
         <p th:text="${firstnameErrorMessage}" ></p>
+        <p th:text="${userAlreadyExistsErrorMessage}"></p>
         <label> First Name   </label>
         <input type="text" th:field="*{firstName}" id=firstName placeholder="First Name" /><br/><br/>
 
@@ -103,7 +104,6 @@ input[type=submit]:hover {
         <p th:text="${passwordErrorMessage}" ></p>
         <label>Password     </label>
         <input type="text" th:field="*{password}" placeholder="Password"/><br/><br/><br/><br/>
-
 
         <input type="submit" value="Register" />
     </form>
