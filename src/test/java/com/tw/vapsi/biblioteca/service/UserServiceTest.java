@@ -7,6 +7,7 @@ import com.tw.vapsi.biblioteca.service.dto.UserDetailsDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,5 +84,20 @@ class UserServiceTest {
 
         assertEquals(expectedUser, actualUser);
         verify(userRepository, times(1)).save(userToBeCreated);
+    }
+
+    @Test
+    void shouldNotAllowToCreateNewUserWithSameEmail() throws UserAlreadyExistsException {
+        User userToBeCreated = new User(
+                "Micky",
+                "Mouse",
+                "micky-mouse@example.com",
+                "encoded-password");
+
+
+        when(userRepository.findByEmail("micky-mouse@example.com")).thenReturn(Optional.of(userToBeCreated));
+
+        assertThrows(UserAlreadyExistsException.class, () -> userService.save("Micky", "Mouse", "micky-mouse@example.com", "password"));
+        verify(userRepository, times(0)).save(userToBeCreated);
     }
 }

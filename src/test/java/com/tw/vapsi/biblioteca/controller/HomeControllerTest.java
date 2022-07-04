@@ -1,6 +1,7 @@
 package com.tw.vapsi.biblioteca.controller;
 
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
+import com.tw.vapsi.biblioteca.exception.UserAlreadyExistsException;
 import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -29,35 +30,66 @@ class HomeControllerTest extends ControllerTestHelper {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk());
     }
-    @Test
-    void shouldCreateNewUserOnSuccesfullSignUp() throws Exception {
 
-        User newUser = new User("mickey","mouse","abc@gmail.com","abc");
-        when(userService.save("mickey","mouse","abc@gmail.com","abc"))
+    @Test
+    void shouldCreateNewUserOnSuccessfulSignUp() throws Exception {
+
+        User newUser = new User("mickey", "mouse", "abc@gmail.com", "abc");
+        when(userService.save("mickey", "mouse", "abc@gmail.com", "abc"))
                 .thenReturn(newUser);
 
         mockMvc.perform(post("/addUser")
-                .param("firstname","mickey")
-                .param("lastname","mouse")
-                .param("email","abc@gmail.com")
-                .param("password","abc"))
+                        .param("firstName", "mickey")
+                        .param("lastName", "mouse")
+                        .param("email", "abc@gmail.com")
+                        .param("password", "abc"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("user"))
-                .andExpect(MockMvcResultMatchers.view().name("signup"));
-   }
+                .andExpect(MockMvcResultMatchers.view().name("index"));
+        verify(userService, times(1)).save("mickey", "mouse", "abc@gmail.com", "abc");
+    }
 
-   @Test
+    @Test
     void shouldNotCreateNewUserWithInvalidCredentials() throws Exception {
 
         mockMvc.perform(post("/addUser")
-                .param("firstname"," ")
-                .param("lastname"," ")
-                .param("email"," ")
-                .param("password"," "))
+                        .param("firstname", " ")
+                        .param("lastname", " ")
+                        .param("email", " ")
+                        .param("password", " "))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("firstnameErrorMessage"))
-                        .andExpect(MockMvcResultMatchers.model().attributeExists("lastnameErrorMessage"))
-                                .andExpect(MockMvcResultMatchers.model().attributeExists("emailErrorMessage"))
-                                        .andExpect(MockMvcResultMatchers.model().attributeExists("passwordErrorMessage"));
-   }
+                .andExpect(MockMvcResultMatchers.model().attributeExists("lastnameErrorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("emailErrorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("passwordErrorMessage"));
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
+    void shouldRedirectToSignUpPage() throws Exception {
+        mockMvc.perform(get("/signup"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("user"))
+                .andExpect(MockMvcResultMatchers.view().name("signup"));
+    }
+
+    @Test
+    void shouldNotCreateNewUserAgainWithSameEmailID() throws Exception {
+
+        UserAlreadyExistsException userAlreadyExistsException = new UserAlreadyExistsException("User already exists with that Email Id. Please try again.");
+        when(userService.save("mickey", "mouse", "abc@gmail.com", "abc")).thenThrow(userAlreadyExistsException);
+
+
+        mockMvc.perform(post("/addUser")
+                        .param("firstName", "mickey")
+                        .param("lastName", "mouse")
+                        .param("email", "abc@gmail.com")
+                        .param("password", "abc"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("user"))
+                .andExpect(MockMvcResultMatchers.view().name("signup"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("userAlreadyExistsErrorMessage"));
+
+        verify(userService, times(1)).save("mickey", "mouse", "abc@gmail.com", "abc");
+    }
 }

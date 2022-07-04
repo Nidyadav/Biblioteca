@@ -18,6 +18,7 @@ jacocoTestReport {
 		classDirectories.setFrom(files(classDirectories.files.collect {
 			fileTree(dir: it, exclude: [
 					"com/tw/vapsi/biblioteca/BibliotecaApplication.class",
+					"com/tw/vapasi/biblioteca/service/dto/**",
 					"com/tw/vapsi/biblioteca/model/**"
 			])
 		}))
