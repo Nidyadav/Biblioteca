@@ -27,8 +27,8 @@
 
 </head>
 <body>
-<p th:text="${successCheckoutMessage}"></p>
-<p th:text="${errorMessage}"></p>
+<p th:text="${successCheckoutMessage}" style="color:green"></p>
+<p th:text="${errorMessage}" style="color:red"></p>
 <span th:if="${book != null}">
     <table border="1"><h2>List Of Books</h2>
     <thead>

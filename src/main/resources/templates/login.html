@@ -90,23 +90,23 @@ input[type=submit]:hover {
     <title>Thought Works</title>
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
-</div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
 
-<div>
-    <p th:text="${errorMessage}"></p>
-</div>
 
 <div align="center">
     <div class="header">
         <h1>User Login</h1>
         <p></p>
     </div>
+    <div th:if="${param.error}" style="color:red">
+        Invalid username and password.
+    </div>
+    <div th:if="${param.logout}" style="color:green">
+        You have been logged out.
+    </div>
 
+    <div>
+        <p th:text="${errorMessage}" style="color:red"></p>
+    </div>
 
     <form th:action="@{/login}" method="post">
         <br/><br/>

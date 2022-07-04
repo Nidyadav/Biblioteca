@@ -95,20 +95,20 @@ input[type=submit]:hover {
     </div>
     <form action="#" th:action="@{addUser}" th:object="${user}" method="post" >
         <br/><br/>
-        <p th:text="${firstnameErrorMessage}" ></p>
-        <p th:text="${userAlreadyExistsErrorMessage}"></p>
+        <p th:text="${firstnameErrorMessage}" style="color:red"></p>
+        <p th:text="${userAlreadyExistsErrorMessage}" style="color:red"></p>
         <label> First Name   </label>
         <input type="text" th:field="*{firstName}" id=firstName placeholder="First Name" /><br/><br/>
 
-        <p th:text="${lastnameErrorMessage}" ></p>
+        <p th:text="${lastnameErrorMessage}" style="color:red"></p>
         <label>Last Name   </label>
         <input type="text" th:field="*{lastName}" placeholder="Last Name"/><br/><br/>
 
-        <p th:text="${emailErrorMessage}" ></p>
+        <p th:text="${emailErrorMessage}" style="color:red"></p>
         <label >Email Id    </label>
         <input type="text" th:field="*{email}" placeholder="Email Id"/><br/><br/>
 
-        <p th:text="${passwordErrorMessage}" ></p>
+        <p th:text="${passwordErrorMessage}" style="color:red" ></p>
         <label>Password     </label>
         <input type="password" th:field="*{password}" placeholder="Password"/><br/><br/><br/><br/>
 
