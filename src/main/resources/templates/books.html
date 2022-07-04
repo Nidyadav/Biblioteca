@@ -20,6 +20,35 @@
     background-color: #1abc9c;
     color: white;
     }
+    .header {
+      padding: 10px;
+      text-align: center;
+      background: #1abc9c;
+      color: white;
+      font-size: 30px;
+    }
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background:#1abc9c;
+}
+
+/* Style the topnav links */
+.topnav a {
+  font-family: Arial, Helvetica, sans-serif;
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
 
     </style>
     <meta charset="UTF-8">
@@ -27,10 +56,21 @@
 
 </head>
 <body>
+<div align="center">
+    <div class="header">
+        <h1>List of Books</h1>
+        <p></p>
+    </div>
+</div>
+<div class="topnav">
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+</div>
 <p th:text="${successCheckoutMessage}" style="color:green"></p>
 <p th:text="${errorMessage}" style="color:red"></p>
 <span th:if="${book != null}">
-    <table border="1"><h2>List Of Books</h2>
+    <table border="1">
     <thead>
 <tr>
     <th>Id</th>
@@ -53,10 +93,6 @@
 
 
 </span>
-<div sec:authorize="hasAnyAuthority('LIBRARIAN')">
-    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
-</div>
-<a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
-<a sec:authorize="isAuthenticated()" th:href="@{/logout}">Logout</a>
+
 </body>
 </html>
