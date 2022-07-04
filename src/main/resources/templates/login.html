@@ -76,7 +76,8 @@ input[type=submit]:hover {
   }
 }
 
-</style>
+
+    </style>
 
     <title>Thought Works</title>
 </head>
@@ -87,33 +88,27 @@ input[type=submit]:hover {
 <div th:if="${param.logout}">
     You have been logged out.
 </div>
-<<<<<<< HEAD
 
 <div>
     <p th:text="${errorMessage}"></p>
 </div>
 
-=======
-<div>
-    <p th:text="${errorMessage}"></p>
-</div>
->>>>>>> f1b422d (add. error message to login before checkout)
 <div align="center">
     <div class="header">
         <h1>User Login</h1>
         <p></p>
     </div>
 
-<form th:action="@{/login}" method="post">
-<br/><br/>
-    <label>Username   </label>
-    <input type="text" placeholder="Username" name="username"/><br/><br/>
+    <form th:action="@{/login}" method="post">
+        <br/><br/>
+        <label>Username </label>
+        <input type="text" placeholder="Username" name="username"/><br/><br/>
 
-    <label> Password  </label>
-    <input type="text" name="password" placeholder="Password"/><br/><br/>
+        <label> Password </label>
+        <input type="text" name="password" placeholder="Password"/><br/><br/>
 
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+        <div><input type="submit" value="Sign In"/></div>
+    </form>
 </div>
 </body>
 </html>
