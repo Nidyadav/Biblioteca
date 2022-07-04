@@ -95,13 +95,13 @@ input[type=submit]:hover {
     </div>
     <form th:action="@{/books/save}"  th:object="${book}" method="post">
         <p th:text="${nameErrorMessage}" style="color:red"></p>
-        Book Name: <input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
+        <label>Book Name: </label><input id="bookDetail" type="text" th:field="*{name}"  value=" "/><br/>
         <p th:text="${authorErrorMessage}" style="color:red"></p>
-        Author: <input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
+            <label>Author: </label><input id ="bookAuthor" type="text" th:field="*{author}"  value=" "/><br/>
         <p th:text="${genreErrorMessage}" style="color:red"></p>
-        Genre: <input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
+                <label>Genre: </label><input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
         <p th:text="${yearOfPublishErrorMessage}" style="color:red"></p>
-        Year Of Publishing: <input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}" value=" "/><br/>
+                    <label>Year Of Publishing: </label><input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}" value=" "/><br/>
         <p></p>
         <input type="submit" value="Submit"/>
     </form>
