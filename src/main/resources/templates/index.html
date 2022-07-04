@@ -105,7 +105,7 @@ input[type=text], select, textarea {
     <a th:href="@{/books/list}">List Books</a>
     <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
-    <a th:href="@{/signup}" style="float:right">Signup</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/signup}" style="float:right">Signup</a>
 </div>
 
 <div type="text">
