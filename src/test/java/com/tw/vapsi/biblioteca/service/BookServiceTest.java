@@ -2,7 +2,9 @@ package com.tw.vapsi.biblioteca.service;
 
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.model.Book;
+import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.repository.BooksRepository;
+import com.tw.vapsi.biblioteca.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,6 +26,10 @@ class BookServiceTest {
 
     @MockBean
     private BooksRepository booksRepository;
+
+    @MockBean
+    private UserRepository userRepository;
+
 
     @Test
     void shouldReturnListOfBooks() throws NoBooksAvailableException {
@@ -60,5 +67,55 @@ class BookServiceTest {
 
         verify(booksRepository,times(1)).save(book);
         assertEquals(createdBook,actualCreated);
+    }
+
+    @Test
+    void shouldBeAbleToCheckoutBookWhenBookIsAvailable() {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        book.setId(1L);
+        Book checkedOutBook = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, false, 1865);
+        checkedOutBook.setId(1L);
+
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        doNothing().when(booksRepository).checkOutBook(1, 1l);
+        when(booksRepository.save(book)).thenReturn(checkedOutBook);
+
+        Book actualCheckedOutBook = bookService.checkOutBook(1l, "admin@gmail.com");
+
+        verify(booksRepository, times(1)).save(book);
+        assertEquals(checkedOutBook, actualCheckedOutBook);
+    }
+
+    @Test
+    void shouldReturnTrueIfBookIsAvailableForCheckout() {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        book.setId(1L);
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        assertTrue(bookService.isBookAvailableForCheckout(1L));
+    }
+
+    @Test
+    void shouldReturnFalseIfBookIsAvailableForCheckout() {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, false, 1865);
+        book.setId(1L);
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+        assertFalse(bookService.isBookAvailableForCheckout(1L));
+    }
+
+    @Test
+    void shouldReturnaBookWhenGetBookByIdIsCalled() {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        book.setId(1L);
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+        assertEquals(bookService.getBookById(1l),book);
     }
 }

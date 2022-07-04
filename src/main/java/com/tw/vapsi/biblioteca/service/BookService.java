@@ -37,11 +37,15 @@ public class BookService {
         return booksRepository.save(book);
     }
 
-    public void checkOutBook(long bookId, String userEmail) {
+    public Book getBookById(long bookId) {
+        return booksRepository.findById(bookId).get();
+    }
+
+    public Book checkOutBook(long bookId, String userEmail) {
         User user = userRepository.findByEmail(userEmail).get();
         Book book = booksRepository.findById(bookId).get();
-        booksRepository.checkOutBook(user.getUser_id(),bookId);
+        booksRepository.checkOutBook(user.getUser_id(), bookId);
         book.setAvailable(false);
-        booksRepository.save(book);
+        return booksRepository.save(book);
     }
 }

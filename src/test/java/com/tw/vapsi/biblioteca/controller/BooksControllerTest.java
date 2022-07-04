@@ -60,15 +60,6 @@ class BooksControllerTest extends ControllerTestHelper {
 
     @Test
     @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
-    void shouldRedirectToBooksPageWithErrorMessage() throws Exception {
-        mockMvc.perform(get("/books/checkout/1"))
-                .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("books"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
-    }
-
-    @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
     void shouldRedirectToCreatePage() throws Exception {
         mockMvc.perform(get("/books/create"))
                 .andExpect(status().isOk())
@@ -114,7 +105,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    void shouldRedirectToLoginIfUserIsNotLoggedIn() throws Exception {
+    void shouldRedirectToLoginPageIfUserIsNotLoggedInWithErrorMessage() throws Exception {
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("login"))
@@ -122,11 +113,29 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
+    @WithMockUser(username = "admin", authorities = { "USER" })
+    void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableToCheckout() throws Exception {
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General",0, false,1865);
+        book.setId(1L);
+        when(bookService.getBookById(book.getId())).thenReturn(book);
+        when(bookService.isBookAvailableForCheckout(1L)).thenReturn(false);
+
+        mockMvc.perform(get("/books/checkout/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("books"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
+
+        verify(bookService, times(1)).isBookAvailableForCheckout(1L);
+        verify(bookService, times(0)).checkOutBook(1,"admin");
+
+    }
+
+    @Test
     @WithMockUser(username = "admin", authorities = {"USER"})
     void shouldRedirectToBooksPageOnSuccessfulCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
         when(bookService.isBookAvailableForCheckout(1)).thenReturn(true);
-
+        when(bookService.checkOutBook(1l, "admin")).thenReturn(book);
 
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())

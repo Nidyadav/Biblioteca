@@ -46,12 +46,13 @@ public class BooksController {
         }
 
         if (!bookService.isBookAvailableForCheckout(bookId)) {
-            model.addAttribute(ERROR_MESSAGE, "Book id: "+bookId+" Not Available For Checkout.");
+            Book book = bookService.getBookById(bookId);
+            model.addAttribute(ERROR_MESSAGE, "Book: \""+book.getName()+"\" Not Available For Checkout.");
             return books(model);
         }
 
-        bookService.checkOutBook(bookId, loggedInUser.getName());
-        model.addAttribute(SUCCESS_MESSAGE, "Book CheckedOut Successfully");
+        Book book = bookService.checkOutBook(bookId, loggedInUser.getName());
+        model.addAttribute(SUCCESS_MESSAGE, "Book: \""+book.getName()+"\" Checkedout Successfully");
 
         return books(model);
     }
