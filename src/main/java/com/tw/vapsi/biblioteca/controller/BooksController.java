@@ -101,10 +101,14 @@ public class BooksController {
 
     @GetMapping("/mybooks")
     public String getMyBooks(Model model){
-        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Im here " + loggedInUser.getName());
-        Set<Book> books = bookService.getMyBooks(loggedInUser.getName());
-        model.addAttribute("myBook",books);
+        try {
+            Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println("Im here " + loggedInUser.getName());
+            Set<Book> books = bookService.getMyBooks(loggedInUser.getName());
+            model.addAttribute("myBook", books);
+        } catch (NoBooksAvailableException exception) {
+            model.addAttribute("errorMessage",exception.getMessage());
+        }
         return "myBooks";
     }
 }

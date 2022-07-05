@@ -11,10 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -117,5 +114,37 @@ class BookServiceTest {
         book.setId(1L);
         when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
         assertEquals(bookService.getBookById(1L),book);
+    }
+
+    @Test
+    void shouldReturnBooksCheckedOutByTheUser() {
+        Set<Book> books = new HashSet<>();
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        book.setId(1L);
+        books.add(book);
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        user.setBooks(books);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+
+        Set<Book> checkedOutBooks = bookService.getMyBooks("admin@gmail.com");
+
+        assertEquals(user.getBooks(),checkedOutBooks);
+        verify(userRepository,times(1)).findByEmail("admin@gmail.com");
+        verify(userRepository,times(1)).findById(1L);
+    }
+
+    @Test
+    void shouldThrowErrorWhenNoBooksCheckedOutByTheUser() {
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        user.setBooks(new HashSet<>());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+
+        assertThrows(NoBooksAvailableException.class,()->bookService.getMyBooks("admin@gmail.com"));
+
+        verify(userRepository,times(1)).findByEmail("admin@gmail.com");
+        verify(userRepository,times(1)).findById(1L);
     }
 }

@@ -62,8 +62,9 @@
 <div class="topnav">
   <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 </div>
-<p></p>
-<table border="1" th:if="${myBook != null}">
+<p th:text="${errorMessage}" style="color:red"></p>
+<span th:if="${myBook != null}">
+<table border="1" >
   <tr>
     <th>Id</th>
     <th>Name</th>
@@ -79,5 +80,6 @@
     <td><a th:href="@{/books/list}">Return</a></td>
   </tr>
 </table>
+</span>
 </body>
 </html>

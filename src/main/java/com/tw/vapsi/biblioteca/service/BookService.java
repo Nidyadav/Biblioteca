@@ -50,9 +50,13 @@ public class BookService {
         return booksRepository.save(book);
     }
 
-    public Set<Book> getMyBooks(String userEmail) {
-        User user = userRepository.findByEmail(userEmail).get();
-        User user1 = userRepository.findById(user.getId()).get();
-        return user1.getBooks();
+    public Set<Book> getMyBooks(String userEmail) throws NoBooksAvailableException {
+        User user = userRepository.findById(
+                userRepository.findByEmail(userEmail).get().getId()).get();
+        Set<Book> checkedOutBooks =user.getBooks();
+        if (checkedOutBooks.size()==0) {
+            throw new NoBooksAvailableException("No books checked by the user.");
+        }
+        return checkedOutBooks;
     }
 }
