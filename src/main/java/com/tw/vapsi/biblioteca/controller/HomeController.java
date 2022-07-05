@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.regex.*;
 
 @Controller
@@ -32,17 +34,20 @@ public class HomeController {
     }
 
     @PostMapping("/addUser")
-    public String saveUser(@ModelAttribute("user") User user, Model model) throws UserAlreadyExistsException {
+    public String saveUser(@ModelAttribute("user") User user, Model model,final RedirectAttributes redirectAttributes) throws UserAlreadyExistsException {
+
         if (checkNewUserDetails(user, model)) {
             try {
                 user = userService.save(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
-                return "index";
+                redirectAttributes.addFlashAttribute("message", "Successfully added..");
+                model.addAttribute(user);
+                return "successfulsignup";
+
             } catch (UserAlreadyExistsException userAlreadyExistsException) {
                 model.addAttribute("userAlreadyExistsErrorMessage", userAlreadyExistsException.getMessage());
                 return "signup";
             }
         }
-
         return "signup";
     }
 

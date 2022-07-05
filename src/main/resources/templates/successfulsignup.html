@@ -94,26 +94,21 @@ input[type=submit]:hover {
         <h1>User Registration</h1>
         <p></p>
     </div>
-    <form action="#" th:action="@{addUser}" th:object="${user}" method="post">
+    <form action="#" th:action="@{/}" th:object="${user}">
         <br/><br/>
-        <p th:text="${firstnameErrorMessage}" style="color:red"></p>
-        <p th:text="${userAlreadyExistsErrorMessage}" style="color:red"></p>
-        <label> First Name </label>
-        <input type="text" th:field="*{firstName}" id=firstName placeholder="First Name"/><br/><br/>
 
-        <p th:text="${lastnameErrorMessage}" style="color:red"></p>
-        <label>Last Name </label>
-        <input type="text" th:field="*{lastName}" placeholder="Last Name"/><br/><br/>
+        <label> First Name  : </label>
+        <label th:text="${user.firstName}" /><br/><br/>
 
-        <p th:text="${emailErrorMessage}" style="color:red"></p>
-        <label>Email Id </label>
-        <input type="text" th:field="*{email}" placeholder="Email Id"/><br/><br/>
+        <label>Last Name    :</label>
+        <label th:text="${user.lastName}" /><br/><br/>
 
-        <p th:text="${passwordErrorMessage}" style="color:red"></p>
-        <label>Password </label>
-        <input type="password" th:field="*{password}" placeholder="Password"/><br/><br/><br/><br/>
+        <label>Email Id      :</label>
+        <label th:text="${user.email}" /><br/><br/>
 
-        <input type="submit" value="Register"/>
+        <label>Sign Up Successfull!!       </label>
+
+        <input type="submit" value="Continue"/>
     </form>
 </div>
 </body>
