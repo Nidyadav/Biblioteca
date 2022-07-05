@@ -61,6 +61,47 @@ class HomeControllerTest extends ControllerTestHelper {
     }
 
     @Test
+    void shouldNotCreateNewUserWithInvalidEmailId_1() throws Exception {
+
+        mockMvc.perform(post("/addUser")
+                        .param("firstname", "mickey")
+                        .param("lastname", "mouse")
+                        .param("email", "abc")
+                        .param("password", "abcd"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("emailErrorMessage"));
+
+        verify(userService , times(0)).save("mickey", "mouse", "abc@gmail", "abcd");
+    }
+
+    @Test
+    void shouldNotCreateNewUserWithInvalidEmailId_2() throws Exception {
+
+        mockMvc.perform(post("/addUser")
+                        .param("firstname", "mickey")
+                        .param("lastname", "mouse")
+                        .param("email", "abc@gmail")
+                        .param("password", "abcd"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("emailErrorMessage"));
+
+        verify(userService , times(0)).save("mickey", "mouse", "abc@gmail", "abcd");
+    }
+    @Test
+    void shouldNotCreateNewUserWithInvalidEmailId_3() throws Exception {
+
+        mockMvc.perform(post("/addUser")
+                        .param("firstname", "mickey")
+                        .param("lastname", "mouse")
+                        .param("email", "abc.com")
+                        .param("password", "abcd"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("emailErrorMessage"));
+
+        verify(userService , times(0)).save("mickey", "mouse", "abc@gmail", "abcd");
+    }
+
+    @Test
     @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
     void shouldRedirectToSignUpPage() throws Exception {
         mockMvc.perform(get("/signup"))

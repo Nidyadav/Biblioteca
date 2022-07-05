@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.regex.*;
 
 @Controller
 public class HomeController {
@@ -60,6 +61,13 @@ public class HomeController {
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             model.addAttribute("emailErrorMessage", "Email cannot be empty");
             isValidAttribute = false;
+
+        }else{
+            String regex ="^(.+)@(.+)$";
+            Pattern pattern=Pattern.compile(regex);
+            Matcher matcher=pattern.matcher(user.getEmail());
+            model.addAttribute("emailErrorMessage", "Please enter valid email.");
+            isValidAttribute = matcher.matches();
         }
 
         if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
