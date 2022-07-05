@@ -105,7 +105,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    void shouldRedirectToLoginPageIfUserIsNotLoggedInWithErrorMessage() throws Exception {
+    void shouldRedirectToLoginIfUserIsNotLoggedInWhenCheckOut() throws Exception {
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("login"))
@@ -135,7 +135,7 @@ class BooksControllerTest extends ControllerTestHelper {
     void shouldRedirectToBooksPageOnSuccessfulCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
         when(bookService.isBookAvailableForCheckout(1)).thenReturn(true);
-        when(bookService.checkOutBook(1l, "admin")).thenReturn(book);
+        when(bookService.checkOutBook(1L, "admin")).thenReturn(book);
 
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())

@@ -82,10 +82,10 @@ class BookServiceTest {
         when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
         when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
 
-        doNothing().when(booksRepository).checkOutBook(1, 1l);
+        doNothing().when(booksRepository).checkOutBook(1, 1L);
         when(booksRepository.save(book)).thenReturn(checkedOutBook);
 
-        Book actualCheckedOutBook = bookService.checkOutBook(1l, "admin@gmail.com");
+        Book actualCheckedOutBook = bookService.checkOutBook(1L, "admin@gmail.com");
 
         verify(booksRepository, times(1)).save(book);
         assertEquals(checkedOutBook, actualCheckedOutBook);
@@ -111,11 +111,11 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldReturnaBookWhenGetBookByIdIsCalled() {
+    void shouldReturnABookWhenGetBookByIdIsCalled() {
         Book book = new Book("War and Peace", "Tolstoy, Leo",
                 "General", 1, true, 1865);
         book.setId(1L);
         when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
-        assertEquals(bookService.getBookById(1l),book);
+        assertEquals(bookService.getBookById(1L),book);
     }
 }

@@ -16,15 +16,15 @@ public class HomeController {
 
     @Autowired
     UserService userService;
+
     @GetMapping("/")
     public String base(Model model) {
-        model.addAttribute("welcomeMessage","Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!");
+        model.addAttribute("welcomeMessage", "Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!");
         return "index";
     }
 
     @GetMapping("/signup")
-    public String signup(Model model)
-    {
+    public String signup(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "signup";
@@ -32,39 +32,38 @@ public class HomeController {
 
     @PostMapping("/addUser")
     public String saveUser(@ModelAttribute("user") User user, Model model) throws UserAlreadyExistsException {
-        if(checkNewUserDetails(user,model)) {
+        if (checkNewUserDetails(user, model)) {
             try {
                 user = userService.save(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassword());
                 return "index";
+            } catch (UserAlreadyExistsException userAlreadyExistsException) {
+                model.addAttribute("userAlreadyExistsErrorMessage", userAlreadyExistsException.getMessage());
+                return "signup";
             }
-            catch(UserAlreadyExistsException userAlreadyExistsException) {
-                     model.addAttribute("userAlreadyExistsErrorMessage",userAlreadyExistsException.getMessage());
-                     return "signup";
-            }
-            }
+        }
 
         return "signup";
     }
 
-    private boolean checkNewUserDetails(User user,Model model){
+    private boolean checkNewUserDetails(User user, Model model) {
         boolean isValidAttribute = true;
-        if(user.getFirstName() == null || user.getFirstName().trim().isEmpty()){
-            model.addAttribute("firstnameErrorMessage","First Name cannot be empty ");
+        if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
+            model.addAttribute("firstnameErrorMessage", "First Name cannot be empty ");
             isValidAttribute = false;
         }
 
-        if(user.getLastName() == null || user.getLastName().trim().isEmpty()){
-            model.addAttribute("lastnameErrorMessage","Last Name cannot be empty");
+        if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+            model.addAttribute("lastnameErrorMessage", "Last Name cannot be empty");
             isValidAttribute = false;
         }
 
-        if(user.getEmail() == null || user.getEmail().trim().isEmpty()){
-            model.addAttribute("emailErrorMessage","Email cannot be empty");
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            model.addAttribute("emailErrorMessage", "Email cannot be empty");
             isValidAttribute = false;
         }
 
-        if(user.getPassword() == null || user.getPassword().trim().isEmpty()){
-            model.addAttribute("passwordErrorMessage","Password cannot be empty");
+        if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
+            model.addAttribute("passwordErrorMessage", "Password cannot be empty");
             isValidAttribute = false;
         }
         return isValidAttribute;
