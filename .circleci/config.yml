@@ -31,12 +31,15 @@ jobs:
       - checkout
       - run: ./gradlew test
 
+
       - store_test_results:
           path: build/test-results
       - store_artifacts:
 #          path: build/reports
 #                build/jacoco
-           path: build/reports/jacoco
+           path: build/reports
+                 build/reports/jacoco
+           destination : test_coverage
 
 
   deployToStage:
