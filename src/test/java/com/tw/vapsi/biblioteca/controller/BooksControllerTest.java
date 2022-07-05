@@ -4,6 +4,7 @@ package com.tw.vapsi.biblioteca.controller;
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.model.Book;
+import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -143,5 +142,19 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.view().name("books"));
 
         verify(bookService, times(1)).checkOutBook(1,"admin");
+    }
+
+    @Test
+    @WithMockUser(username = "user1", authorities = {"USER"})
+    void shouldBeAbleToSeeBooksCheckedOutByTheUser() throws Exception {
+        Set<Book> books = new HashSet<>();
+            books.add(new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865));
+        when(bookService.getMyBooks("user1")).thenReturn(books);
+
+        mockMvc.perform(get("/books/mybooks"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("myBooks"));
+
+        verify(bookService, times(1)).getMyBooks("user1");
     }
 }

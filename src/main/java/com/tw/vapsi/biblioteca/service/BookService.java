@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class BookService {
@@ -47,5 +48,11 @@ public class BookService {
         booksRepository.checkOutBook(user.getUser_id(), bookId);
         book.setAvailable(false);
         return booksRepository.save(book);
+    }
+
+    public Set<Book> getMyBooks(String userEmail) {
+        User user = userRepository.findByEmail(userEmail).get();
+        User user1 = userRepository.findById(user.getId()).get();
+        return user1.getBooks();
     }
 }

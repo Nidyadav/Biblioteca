@@ -2,6 +2,7 @@ package com.tw.vapsi.biblioteca.controller;
 
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.model.Book;
+import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/books")
@@ -95,5 +97,14 @@ public class BooksController {
             isValidAttribute = false;
         }
         return isValidAttribute;
+    }
+
+    @GetMapping("/mybooks")
+    public String getMyBooks(Model model){
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Im here " + loggedInUser.getName());
+        Set<Book> books = bookService.getMyBooks(loggedInUser.getName());
+        model.addAttribute("myBook",books);
+        return "myBooks";
     }
 }

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <title>My Books</title>
+  <style>
+    table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+    th, td {
+    text-align: left;
+    padding: 8px;
+    }
+
+    tr:nth-child(even){background-color: #f2f2f2}
+
+    th {
+    background-color: #1abc9c;
+    color: white;
+    }
+    .header {
+      padding: 10px;
+      text-align: center;
+      background: #1abc9c;
+      color: white;
+      font-size: 30px;
+    }
+
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background:#1abc9c;
+}
+
+/* Style the topnav links */
+.topnav a {
+  font-family: Arial, Helvetica, sans-serif;
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+/* Change color on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+    </style>
+</head>
+<body>
+<div align="center">
+  <div class="header">
+    <h1>My Books</h1>
+    <p></p>
+  </div>
+</div>
+<div class="topnav">
+  <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+</div>
+<p></p>
+<table border="1" th:if="${myBook != null}">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Author</th>
+    <th>Year of Publication</th>
+    <th>Return</th>
+  </tr>
+  <tr th:each="b: ${myBook}">
+    <td th:text="${b.id}"></td>
+    <td th:text="${b.name}"></td>
+    <td th:text="${b.author}"></td>
+    <td th:text="${b.yearOfPublish}"></td>
+    <td><a th:href="@{/books/list}">Return</a></td>
+  </tr>
+</table>
+</body>
+</html>
