@@ -83,7 +83,6 @@ public class HomeController {
         if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
             model.addAttribute("passwordErrorMessage", "Password cannot be empty");
             isValidAttribute = false;
-
         }
         return isValidAttribute;
     }
