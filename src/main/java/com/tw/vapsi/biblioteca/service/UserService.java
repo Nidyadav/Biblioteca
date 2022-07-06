@@ -32,12 +32,10 @@ public class UserService implements UserDetailsService {
     public User save(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException {
         String encodePassword = bCryptPasswordEncoder.encode(password);
         Optional<User> existingUser = userRepository.findByEmail(email);
-        if (existingUser.isPresent()) {
+        if (existingUser.isPresent())
             throw new UserAlreadyExistsException("User already exists with that Email Id. Please try again.");
 
-        } else {
-            User user = new User(firstName, lastName, email, encodePassword);
-            return userRepository.save(user);
-        }
+        User user = new User(firstName, lastName, email, encodePassword);
+        return userRepository.save(user);
     }
 }
