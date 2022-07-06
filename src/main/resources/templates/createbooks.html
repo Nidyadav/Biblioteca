@@ -8,7 +8,7 @@
   box-sizing: border-box;
 }
 .header {
-  padding: 5px;
+  padding: 1px;
   text-align: center;
   background: #1abc9c;
   color: white;
@@ -75,7 +75,7 @@ input[type=submit]:hover {
 .container {
   border-radius: 5px;
   background-color: #f2f2f2;
-  padding: 20px;
+  padding: 10px;
 }
 
 
@@ -102,8 +102,8 @@ input[type=submit]:hover {
 </head>
 <body>
 <div class="topnav">
-    <a th:href="@{/books/list}">List Books</a>
     <a th:href="@{/}">Home</a>
+    <a th:href="@{/books/list}">List Books</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 
 </div>

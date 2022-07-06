@@ -21,7 +21,7 @@
     color: white;
     }
     .header {
-      padding: 5px;
+      padding: 1px;
       text-align: center;
       background: #1abc9c;
       color: white;
@@ -58,9 +58,9 @@
 </head>
 <body>
 <div class="topnav">
+    <a th:href="@{/}">Home</a>
     <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
-    <a th:href="@{/}">Home</a>
     <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 </div>
