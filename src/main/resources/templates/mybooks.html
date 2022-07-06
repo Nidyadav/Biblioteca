@@ -30,6 +30,7 @@
 
 /* Style the top navigation bar */
 .topnav {
+  margin-bottom:10px;
   overflow: hidden;
   background:#1abc9c;
 }
@@ -50,25 +51,26 @@
   color: black;
 }
 
-
-
-    </style>
+</style>
 </head>
 <body>
+<span>
 <div class="topnav">
     <a th:href="@{/books/list}">List Books</a>
     <a th:href="@{/}">Home</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 </div>
+</span>
 <div align="center">
     <div class="header">
         <h1>My Books</h1>
         <p></p>
     </div>
 </div>
-
-<p th:text="${errorMessage}" style="color:red"></p>
-<p th:text="${successCheckoutMessage}" style="color:red"></p>
+<div>
+    <p th:text="${errorMessage}" style="color:red"></p>
+    <p th:text="${successCheckoutMessage}" style="color:green"></p>
+</div>
 <span th:if="${myBook != null}">
 <table border="1">
   <tr>
