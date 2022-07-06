@@ -1,6 +1,10 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.InvalidUserException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
 import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.repository.BooksRepository;
@@ -10,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -21,6 +26,8 @@ public class BookService {
     @Autowired
     private UserRepository userRepository;
 
+    public static final int MAX_CHECK_OUT_BOOK_LIMIT = 5;
+
     public List<Book> getBooks() throws NoBooksAvailableException {
         List<Book> bookList = booksRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
         if (bookList.isEmpty()) {
@@ -29,30 +36,34 @@ public class BookService {
         return bookList;
     }
 
-    public boolean isBookAvailableForCheckout(long bookId) {
-        Book book = booksRepository.findById(bookId).get();
-        return book.isAvailable();
-    }
-
     public Book createBook(Book book) {
         return booksRepository.save(book);
     }
 
-    public Book getBookById(long bookId) {
-        return booksRepository.findById(bookId).get();
-    }
+    public Book checkOutBook(long bookId, String userEmail) throws BookCheckOutException {
+        Optional<Book> bookOptional = booksRepository.findById(bookId);
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        if (!bookOptional.isPresent())
+            throw new BookNotAvailableForCheckOutException("Book Not Found");
+        if (!userOptional.isPresent())
+            throw new InvalidUserException("Invalid User");
+        Book book = bookOptional.get();
+        User user = userOptional.get();
+        if (!book.isAvailable())
+            throw new BookNotAvailableForCheckOutException("Book: \"" + book.getName() + "\" Not Available For Checkout.");
 
-    public Book checkOutBook(long bookId, String userEmail) {
-        User user = userRepository.findByEmail(userEmail).get();
-        Book book = booksRepository.findById(bookId).get();
-        booksRepository.checkOutBook(user.getUser_id(), bookId);
+        if (user.getBooks().size() >= MAX_CHECK_OUT_BOOK_LIMIT)
+            throw new MaximumBooksCheckedOutException("User can check out maximum " + MAX_CHECK_OUT_BOOK_LIMIT + " books");
+
         book.setAvailable(false);
+        user.getBooks().add(book);
+        userRepository.save(user);
         return booksRepository.save(book);
     }
 
     public Set<Book> getMyBooks(String userEmail) throws NoBooksAvailableException {
         User user = userRepository.findById(
-                userRepository.findByEmail(userEmail).get().getId()).get();
+                userRepository.findByEmail(userEmail).get().getUserId()).get();
         Set<Book> checkedOutBooks =user.getBooks();
         if (checkedOutBooks.size()==0) {
             throw new NoBooksAvailableException("No books checked by the user.");

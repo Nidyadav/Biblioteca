@@ -5,33 +5,44 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 public class UserDetailsDTO implements UserDetails {
 
+    private long userId;
     private final String userName;
     private final String password;
     private final List<SimpleGrantedAuthority> authorities;
 
-    public UserDetailsDTO(String userName, String password, List<SimpleGrantedAuthority> authorities) {
-
+    public UserDetailsDTO(long userId, String userName, String password, List<SimpleGrantedAuthority> authorities) {
+        this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.authorities = authorities;
     }
 
 
-
     public static UserDetails create(User user) {
         List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
              simpleGrantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));
 
-        return new UserDetailsDTO(user.getEmail(), user.getPassword(), simpleGrantedAuthorities);
+        return new UserDetailsDTO(user.getUserId(),user.getEmail(), user.getPassword(), simpleGrantedAuthorities);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override

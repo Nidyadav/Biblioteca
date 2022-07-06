@@ -86,7 +86,14 @@
         <td th:text="${b.name}"></td>
         <td th:text="${b.author}"></td>
         <td th:text="${b.yearOfPublish}"></td>
-        <td><a th:href="@{/books/checkout/{id}(id=${b.id})}">CheckOut</a></td>
+        <td>
+            <span th:if="${b.isAvailable}">
+                <a th:href="@{/books/checkout/{id}(id=${b.id})}">CheckOut</a>
+            </span>
+            <span th:if="${!b.isAvailable}">
+                <th:text>Not Available</th:text>
+            </span>
+        </td>
     </tr>
     </tbody>
 </table>

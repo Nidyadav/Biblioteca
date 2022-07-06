@@ -29,6 +29,10 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("No user exists with username : %s", username)));
     }
 
+    public User loadUserByEmail(String userEmail){
+        return userRepository.findByEmail(userEmail).get();
+    }
+
     public User save(String firstName, String lastName, String email, String password) throws UserAlreadyExistsException {
         String encodePassword = bCryptPasswordEncoder.encode(password);
         Optional<User> existingUser = userRepository.findByEmail(email);

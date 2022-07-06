@@ -3,8 +3,9 @@ package com.tw.vapsi.biblioteca.controller;
 
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
-import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,19 +114,19 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "USER" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "USER" })
     void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableToCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General",0, false,1865);
         book.setId(1L);
-        when(bookService.getBookById(book.getId())).thenReturn(book);
-        when(bookService.isBookAvailableForCheckout(1L)).thenReturn(false);
+        BookNotAvailableForCheckOutException bookNotAvailableForCheckOutException = new BookNotAvailableForCheckOutException("Book: \""+book.getName()+"\" Not Available For Checkout.");
+        when(bookService.checkOutBook(1L,"admin@gmail.com")).thenThrow(bookNotAvailableForCheckOutException);
 
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("books"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookNotAvailableForCheckOutException.getMessage()));
 
-        verify(bookService, times(1)).isBookAvailableForCheckout(1L);
         verify(bookService, times(0)).checkOutBook(1,"admin");
 
     }
@@ -134,7 +135,6 @@ class BooksControllerTest extends ControllerTestHelper {
     @WithMockUser(username = "admin", authorities = {"USER"})
     void shouldRedirectToBooksPageOnSuccessfulCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
-        when(bookService.isBookAvailableForCheckout(1)).thenReturn(true);
         when(bookService.checkOutBook(1L, "admin")).thenReturn(book);
 
         mockMvc.perform(get("/books/checkout/1"))
@@ -195,4 +195,18 @@ class BooksControllerTest extends ControllerTestHelper {
 
         verify(bookService, times(1)).getMyBooks("user1");
     }
+    @WithMockUser(username = "admin", authorities = { "USER" })
+    void shouldRedirectToBooksPageWithErrorMessageIfUserReachesMaximumCheckoutLimit() throws Exception {
+        MaximumBooksCheckedOutException maximumBooksCheckedOutException = new MaximumBooksCheckedOutException("User can check out "+ BookService.MAX_CHECK_OUT_BOOK_LIMIT +" maximum  books");
+        when(bookService.checkOutBook(1,"admin")).thenThrow(maximumBooksCheckedOutException);
+        mockMvc.perform(get("/books/checkout/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("books"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",maximumBooksCheckedOutException.getMessage()));
+
+        verify(bookService, times(1)).checkOutBook(1,"admin");
+
+    }
+
 }

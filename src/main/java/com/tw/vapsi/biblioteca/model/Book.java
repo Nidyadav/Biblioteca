@@ -1,6 +1,9 @@
 package com.tw.vapsi.biblioteca.model;
 
+import com.tw.vapsi.biblioteca.model.validator.After1800AndBeforeNextYear;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 
 @Entity
@@ -10,20 +13,25 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotBlank(message = "Book Name can not be blank")
     private String name;
 
+    @NotBlank(message = "Author Name can not be blank")
     private String author;
 
+    @NotBlank(message = "Genre Name can not be blank")
     @Column(name="genere")
     private String genre;
 
     private int quantity;
 
     @Column(name="isavailable")
-    private boolean isAvailable;
+    private boolean isAvailable = true;
 
+
+    @After1800AndBeforeNextYear(message = "Invalid year of publish")
     @Column(name="yearofpublish")
-    private int yearOfPublish;
+    private Integer yearOfPublish;
 
     public Book() {
     }
@@ -42,7 +50,7 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id && quantity == book.quantity && isAvailable == book.isAvailable && yearOfPublish == book.yearOfPublish && name.equals(book.name) && author.equals(book.author) && Objects.equals(genre, book.genre);
+        return id == book.id && quantity == book.quantity && isAvailable == book.isAvailable && Objects.equals(yearOfPublish, book.yearOfPublish) && name.equals(book.name) && author.equals(book.author) && Objects.equals(genre, book.genre);
     }
 
     @Override
@@ -98,11 +106,11 @@ public class Book {
         isAvailable = available;
     }
 
-    public int getYearOfPublish() {
+    public Integer getYearOfPublish() {
         return yearOfPublish;
     }
 
-    public void setYearOfPublish(int yearOfPublish) {
+    public void setYearOfPublish(Integer yearOfPublish) {
         this.yearOfPublish = yearOfPublish;
     }
 }

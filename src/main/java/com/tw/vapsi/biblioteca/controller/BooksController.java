@@ -1,9 +1,11 @@
 package com.tw.vapsi.biblioteca.controller;
 
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
+import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
-import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -39,7 +41,8 @@ public class BooksController {
     }
 
     @GetMapping("/checkout/{id}")
-    public String checkOut(@PathVariable("id") long bookId, Model model) {
+    public String checkOut(@PathVariable("id") long bookId, Model model) throws MaximumBooksCheckedOutException {
+
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 
         if (loggedInUser instanceof AnonymousAuthenticationToken) {
@@ -47,15 +50,14 @@ public class BooksController {
             return ("login");
         }
 
-        if (!bookService.isBookAvailableForCheckout(bookId)) {
-            Book book = bookService.getBookById(bookId);
-            model.addAttribute(ERROR_MESSAGE, "Book: \""+book.getName()+"\" Not Available For Checkout.");
+        try {
+            Book book = bookService.checkOutBook(bookId, loggedInUser.getName());
+            model.addAttribute(SUCCESS_MESSAGE, "Book: \"" + book.getName() + "\" Checkedout Successfully");
+        }
+        catch(BookCheckOutException bookCheckOutException){
+            model.addAttribute(ERROR_MESSAGE,bookCheckOutException.getMessage());
             return books(model);
         }
-
-        Book book = bookService.checkOutBook(bookId, loggedInUser.getName());
-        model.addAttribute(SUCCESS_MESSAGE, "Book: \""+book.getName()+"\" Checkedout Successfully");
-
         return books(model);
     }
 
@@ -80,7 +82,7 @@ public class BooksController {
 
     private boolean checkCreateBookAttributes(Book book, Model model) {
         boolean isValidAttribute = true;
-        if (book.getName() == null || book.getName().trim().isEmpty()) {
+        if (Strings.isBlank(book.getName())) {
             model.addAttribute("nameErrorMessage", "Invalid Book Name");
             isValidAttribute = false;
         }
@@ -103,7 +105,6 @@ public class BooksController {
     public String getMyBooks(Model model){
         try {
             Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
-            System.out.println("Im here " + loggedInUser.getName());
             Set<Book> books = bookService.getMyBooks(loggedInUser.getName());
             model.addAttribute("myBook", books);
         } catch (NoBooksAvailableException exception) {

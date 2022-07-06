@@ -11,7 +11,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long user_id;
+    private long userId;
     @Column(name="firstname")
 
     private String firstName;
@@ -35,26 +35,26 @@ public class User {
         this.books = books;
     }
 
-    public long getUser_id() {
-        return user_id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
-    public User(long user_id, String firstName, String lastName, String email, String password) {
+    public User(long userId, String firstName, String lastName, String email, String password) {
 
-        this.user_id = user_id;
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
     }
 
-    public User(long user_id, String firstName, String lastName, String email, String password, String role) {
+    public User(long userId, String firstName, String lastName, String email, String password, String role) {
 
-        this.user_id = user_id;
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -72,14 +72,6 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-    }
-
-    public long getId() {
-        return user_id;
-    }
-
-    public void setId(long id) {
-        this.user_id = id;
     }
 
     public String getFirstName() {
@@ -126,7 +118,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        boolean areIdsEquals = user_id == user.user_id;
+        boolean areIdsEquals = userId == user.userId;
         boolean isFirstNameEqual = firstName.equals(user.firstName);
         boolean isLastNameEqual = lastName.equals(user.lastName);
         boolean isEmailEqual = email.equals(user.email);
@@ -136,6 +128,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(user_id, firstName, lastName, email, password);
+        return Objects.hash(userId, firstName, lastName, email, password);
     }
 }
