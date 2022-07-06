@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.InvalidUserException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
@@ -69,5 +70,17 @@ public class BookService {
             throw new NoBooksAvailableException("No books checked by the user.");
         }
         return checkedOutBooks;
+    }
+
+    public Book returnCheckOutBook(long bookId, String userEmail) {
+        User user = userRepository.findByEmail(userEmail).get();
+        Book book = booksRepository.findById(bookId).get();
+        if(book.isAvailable())
+            throw new BookAlreadyReturnedException("Book "+book.getName()+" is already returned");
+        user.getBooks().remove(book);
+        userRepository.save(user);
+        book.setAvailable(true);
+        return booksRepository.save(book);
+
     }
 }

@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.InvalidUserException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
@@ -13,11 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 class BookServiceTest {
@@ -173,4 +178,72 @@ class BookServiceTest {
         verify(userRepository,times(1)).findByEmail("admin@gmail.com");
         verify(userRepository,times(1)).findById(1L);
     }
+
+    @Test
+    void shouldGiveTheNameOfBookAndSuccessMessageOnReturn() throws Exception {
+
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, false, 1865);
+        book.setId(1L);
+        Book returnedBook = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
+        returnedBook.setId(1L);
+
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        user.getBooks().add(book);
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(userRepository.save(user)).thenReturn(user);
+        when(booksRepository.save(returnedBook)).thenReturn(returnedBook);
+
+        bookService.returnCheckOutBook(1L,"admin@gmail.com");
+
+        verify(booksRepository,times(1)).findById(1L);
+        verify(booksRepository, times(1)).save(returnedBook);
+        verify(userRepository, times(1)).save(user);
+        assertEquals(0, userRepository.findByEmail("admin@gmail.com").get().getBooks().size());
+        assertFalse(userRepository.findByEmail("admin@gmail.com").get().getBooks().contains(book));
+
+
+    }
+
+
+    @Test
+    void shouldShowErrorMessageWhenNoBooksAvailableToReturn() {
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        user.setBooks(new HashSet<>());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+
+        assertThrows(NoBooksAvailableException.class,()->bookService.getMyBooks("admin@gmail.com"));
+
+        verify(userRepository,times(1)).findByEmail("admin@gmail.com");
+        verify(userRepository,times(1)).findById(1L);
+    }
+
+
+    @Test
+    void shouldReturnBookIfBookIsAvailableInMyBooks()
+    {
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        Set<Book> books = new HashSet<>();
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        book.setId(1L);
+        books.add(book);
+        user.setBooks(books);
+        when(userRepository.findById(user.getUserId())).thenReturn(Optional.of(user));
+        assertEquals(books,user.getBooks());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenBookIsAlreadyReturned(){
+        Book book = new Book("War and Peace1", "Tolstoy, Leo","General", 1, true, 1865);
+        book.setId(1L);
+        User user = new User(1L, "admin", "admin", "admin@gmail.com", "pwd");
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(user));
+
+
+        assertThrows(BookAlreadyReturnedException.class, () -> bookService.returnCheckOutBook(1L, "admin@gmail.com"));
+    }
+
 }

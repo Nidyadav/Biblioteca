@@ -68,6 +68,7 @@
 </div>
 
 <p th:text="${errorMessage}" style="color:red"></p>
+<p th:text="${successCheckoutMessage}" style="color:red"></p>
 <span th:if="${myBook != null}">
 <table border="1">
   <tr>
@@ -80,7 +81,7 @@
     <td th:text="${b.name}"></td>
     <td th:text="${b.author}"></td>
     <td th:text="${b.yearOfPublish}"></td>
-    <td><a th:href="@{/books/checkout/{id}(id=${b.id})}">Return</a></td>
+    <td><a th:href="@{/books/returnbook/{id}(id=${b.id})}">Return</a></td>
   </tr>
 </table>
 </span>

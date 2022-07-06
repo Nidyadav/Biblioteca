@@ -2,6 +2,7 @@ package com.tw.vapsi.biblioteca.controller;
 
 
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
+import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
@@ -208,5 +209,35 @@ class BooksControllerTest extends ControllerTestHelper {
         verify(bookService, times(1)).checkOutBook(1,"admin");
 
     }
+    @Test
+    @WithMockUser(username = "admin@gmail.com", authorities = {"USER"})
+    void shouldSeeMessageWhenNoBooksInMyBooks() throws Exception {
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General",0, true,1865);
+        book.setId(1L);
+        BookAlreadyReturnedException bookAlreadyReturnedException = new BookAlreadyReturnedException("Book "+book.getName()+" is already returned");
+        when(bookService.returnCheckOutBook(1L,"admin@gmail.com")).thenThrow(bookAlreadyReturnedException);
 
+        mockMvc.perform(get("/books/returnbook/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("myBooks"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookAlreadyReturnedException.getMessage()));
+
+        verify(bookService, times(1)).returnCheckOutBook(1,"admin@gmail.com");
+
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"USER"})
+    void shouldRedirectToMyBooksPageOnSuccessfulReturn() throws Exception {
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, false, 1865);
+        when(bookService.returnCheckOutBook(1L, "admin")).thenReturn(book);
+
+        mockMvc.perform(get("/books/returnbook/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("successCheckoutMessage"))
+                .andExpect(MockMvcResultMatchers.view().name("myBooks"));
+
+        verify(bookService, times(1)).returnCheckOutBook(1,"admin");
+    }
 }

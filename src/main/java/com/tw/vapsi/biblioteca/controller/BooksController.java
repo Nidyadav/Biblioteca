@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.controller;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
@@ -117,5 +118,18 @@ public class BooksController {
             model.addAttribute ("errorMessage", exception.getMessage ());
         }
         return "myBooks";
+    }
+    @GetMapping("/returnbook/{id}")
+    public String returnCheckOutBook(@PathVariable("id") long bookId, Model model)
+    {
+        Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
+        try{
+            Book returnedBook = bookService.returnCheckOutBook(bookId, loggedInUser.getName());
+            model.addAttribute(SUCCESS_MESSAGE, "Book: \"" + returnedBook.getName() + "\" Returned Successfully");
+        }
+        catch(BookAlreadyReturnedException bookAlreadyReturnedException){
+            model.addAttribute(ERROR_MESSAGE,bookAlreadyReturnedException.getMessage());
+        }
+        return getMyBooks(model);
     }
 }
