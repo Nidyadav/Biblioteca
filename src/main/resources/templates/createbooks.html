@@ -112,7 +112,7 @@ input[type=submit]:hover {
         <h1>Create Book</h1>
         <p></p>
     </div>
-
+    <p th:text="${errorMessage}" style="color:red"></p>
 
     <form th:action="@{/books/save}" th:object="${book}" method="post">
         <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></p>

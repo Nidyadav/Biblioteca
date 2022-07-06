@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.controller;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
 import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
@@ -78,10 +79,16 @@ public class BooksController {
         if(bindingResult.hasErrors()){
             return "createbooks";
         }
-        bookService.createBook (book);
-        List<Book> books = bookService.getBooks ();
-        model.addAttribute ("book", books);
-
+        try {
+            bookService.createBook (book);
+            List<Book> books = bookService.getBooks ();
+            model.addAttribute ("book", books);
+        } catch (BookAlreadyExistsException exception) {
+            model.addAttribute (ERROR_MESSAGE, exception.getMessage ());
+            return "createbooks";
+        } catch (NoBooksAvailableException exception) {
+            model.addAttribute (ERROR_MESSAGE, exception.getMessage ());
+        }
         return "books";
     }
 

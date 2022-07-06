@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
 import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.InvalidUserException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
@@ -60,18 +61,36 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldBeAbleToSaveTheBook() {
+    void shouldBeAbleToSaveTheBook() throws BookAlreadyExistsException {
         Book book = new Book("War and Peace", "Tolstoy, Leo",
                 "General", 1, true, 1865);
         Book createdBook = new Book("War and Peace", "Tolstoy, Leo",
                 "General", 1, true, 1865);
         createdBook.setId(1L);
+        when(booksRepository.findByNameAndYearOfPublish(book.getName(),book.getYearOfPublish()))
+                .thenReturn(new ArrayList<>());
         when(booksRepository.save(book)).thenReturn(createdBook);
 
         Book actualCreated = bookService.createBook(book);
 
         verify(booksRepository, times(1)).save(book);
         assertEquals(createdBook, actualCreated);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenBookDetailsAlreadyAvailable() throws BookAlreadyExistsException {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        Book createdBook = new Book("War and Peace", "Tolstoy, Leo",
+                "General", 1, true, 1865);
+        createdBook.setId(1L);
+        List<Book> bookList = Arrays.asList(book);
+        when(booksRepository.findByNameAndYearOfPublish(book.getName(),book.getYearOfPublish())).thenReturn(bookList);
+        //when(booksRepository.save(book)).thenReturn(createdBook);
+
+        assertThrows(BookAlreadyExistsException.class, ()->bookService.createBook(book));
+
+        verify(booksRepository, times(0)).save(book);
     }
 
     @Test
@@ -148,7 +167,7 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldReturnBooksCheckedOutByTheUser() {
+    void shouldReturnBooksCheckedOutByTheUser() throws NoBooksAvailableException {
         Set<Book> books = new HashSet<>();
         Book book = new Book("War and Peace", "Tolstoy, Leo",
                 "General", 1, true, 1865);

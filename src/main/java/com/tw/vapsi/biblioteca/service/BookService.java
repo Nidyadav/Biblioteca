@@ -1,5 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
+import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
 import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.InvalidUserException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
@@ -37,7 +38,11 @@ public class BookService {
         return bookList;
     }
 
-    public Book createBook(Book book) {
+    public Book createBook(Book book) throws BookAlreadyExistsException {
+        List<Book> booksWithSameName = booksRepository.findByNameAndYearOfPublish(book.getName(), book.getYearOfPublish());
+        if (!booksWithSameName.isEmpty()) {
+            throw new BookAlreadyExistsException("Book Detail already Exist");
+        }
         return booksRepository.save(book);
     }
 

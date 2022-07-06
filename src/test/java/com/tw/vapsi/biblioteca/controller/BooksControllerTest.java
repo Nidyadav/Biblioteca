@@ -2,6 +2,7 @@ package com.tw.vapsi.biblioteca.controller;
 
 
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
+import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
 import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
 import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
@@ -87,6 +88,46 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.model().attribute("book",bookList))
                 .andExpect(status().isOk());
         verify(bookService,times(1)).getBooks();
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    void shouldBeAbleToSaveTheBookButUnableToView() throws Exception {
+        Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
+                "General",1, true,1865);
+        bookToBeAdded.setId(1L);
+        when(bookService.createBook(bookToBeAdded)).thenReturn(bookToBeAdded);
+        when(bookService.getBooks()).thenThrow(new NoBooksAvailableException("No books available"));
+
+        mockMvc.perform(post("/books/save")
+                        .param("name","War and Peace")
+                        .param("author","Tolstoy, Leo")
+                        .param("genre","General")
+                        .param("yearOfPublish","1865"))
+                .andExpect(MockMvcResultMatchers.view().name("books"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(status().isOk());
+        verify(bookService,times(1)).getBooks();
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    void shouldThrowExceptionWhenBookNameAndYearAlreadyExistsInSystem() throws Exception {
+        Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
+                "General",1, true,1865);
+        List<Book> bookList = Collections.singletonList(bookToBeAdded);
+
+        when(bookService.createBook(bookToBeAdded)).thenThrow(new BookAlreadyExistsException("Book details already exists"));
+
+        mockMvc.perform(post("/books/save")
+                        .param("name","War and Peace")
+                        .param("author","Tolstoy, Leo")
+                        .param("genre","General")
+                        .param("yearOfPublish","1865"))
+                .andExpect(MockMvcResultMatchers.view().name("createbooks"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(status().isOk());
+        verify(bookService,times(1)).createBook(bookToBeAdded);
     }
 
     @Test
