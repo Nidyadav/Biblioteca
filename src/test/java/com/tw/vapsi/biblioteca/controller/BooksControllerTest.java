@@ -197,7 +197,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
     @WithMockUser(username = "admin", authorities = { "USER" })
     void shouldRedirectToBooksPageWithErrorMessageIfUserReachesMaximumCheckoutLimit() throws Exception {
-        MaximumBooksCheckedOutException maximumBooksCheckedOutException = new MaximumBooksCheckedOutException("User can check out "+ BookService.MAX_CHECK_OUT_BOOK_LIMIT +" maximum  books");
+        MaximumBooksCheckedOutException maximumBooksCheckedOutException = new MaximumBooksCheckedOutException("You can check out "+ BookService.MAX_CHECK_OUT_BOOK_LIMIT +" maximum  books");
         when(bookService.checkOutBook(1,"admin")).thenThrow(maximumBooksCheckedOutException);
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())

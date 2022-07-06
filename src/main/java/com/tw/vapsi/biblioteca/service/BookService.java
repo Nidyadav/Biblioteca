@@ -53,7 +53,7 @@ public class BookService {
             throw new BookNotAvailableForCheckOutException("Book: \"" + book.getName() + "\" Not Available For Checkout.");
 
         if (user.getBooks().size() >= MAX_CHECK_OUT_BOOK_LIMIT)
-            throw new MaximumBooksCheckedOutException("User can check out maximum " + MAX_CHECK_OUT_BOOK_LIMIT + " books");
+            throw new MaximumBooksCheckedOutException("You can check out maximum " + MAX_CHECK_OUT_BOOK_LIMIT + " books");
 
         book.setAvailable(false);
         user.getBooks().add(book);
