@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-  <meta charset="UTF-8">
-  <title>My Books</title>
-  <style>
+    <meta charset="UTF-8">
+    <title>My Books</title>
+    <style>
     table {
     border-collapse: collapse;
     width: 100%;
@@ -21,11 +21,11 @@
     color: white;
     }
     .header {
-      padding: 10px;
+      padding: 5px;
       text-align: center;
       background: #1abc9c;
       color: white;
-      font-size: 30px;
+      font-size: 15px;
     }
 
 /* Style the top navigation bar */
@@ -50,21 +50,25 @@
   color: black;
 }
 
+
+
     </style>
 </head>
 <body>
 <div align="center">
-  <div class="header">
-    <h1>My Books</h1>
-    <p></p>
-  </div>
+    <div class="header">
+        <h1>My Books</h1>
+        <p></p>
+    </div>
 </div>
+
 <div class="topnav">
-  <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+    <a th:href="@{/books/list}">List Books</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 </div>
 <p th:text="${errorMessage}" style="color:red"></p>
 <span th:if="${myBook != null}">
-<table border="1" >
+<table border="1">
   <tr>
     <th>Id</th>
     <th>Name</th>

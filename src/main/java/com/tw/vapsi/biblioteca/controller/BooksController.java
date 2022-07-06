@@ -22,33 +22,34 @@ import java.util.Set;
 @RequestMapping("/books")
 public class BooksController {
 
+    private static final String ERROR_MESSAGE = "errorMessage";
+    private static final String SUCCESS_MESSAGE = "successCheckoutMessage";
     @Autowired
     private BookService bookService;
 
-    private static final String ERROR_MESSAGE = "errorMessage";
-    private static final String SUCCESS_MESSAGE = "successCheckoutMessage";
-
     @GetMapping("/list")
-    public String books(Model model) {
+    public String books (Model model) {
         List<Book> book;
         try {
-            book = bookService.getBooks();
-            model.addAttribute("book", book);
+            book = bookService.getBooks ();
+            model.addAttribute ("book", book);
         } catch (NoBooksAvailableException noBooksAvailableException) {
-            model.addAttribute(ERROR_MESSAGE, noBooksAvailableException.getMessage());
+            model.addAttribute (ERROR_MESSAGE, noBooksAvailableException.getMessage ());
         }
         return "books";
     }
 
     @GetMapping("/checkout/{id}")
+
     public String checkOut(@PathVariable("id") long bookId, Model model) throws MaximumBooksCheckedOutException {
 
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
 
         if (loggedInUser instanceof AnonymousAuthenticationToken) {
-            model.addAttribute(ERROR_MESSAGE, "Log in to Continue...");
+            model.addAttribute (ERROR_MESSAGE, "Log in to Continue...");
             return ("login");
         }
+
 
         try {
             Book book = bookService.checkOutBook(bookId, loggedInUser.getName());
@@ -59,56 +60,61 @@ public class BooksController {
             return books(model);
         }
         return books(model);
+
     }
 
     @PreAuthorize("hasRole('LIBRARIAN')")
     @GetMapping("/create")
-    public String goToCreatePage(Model model) {
-        model.addAttribute("book", new Book());
+    public String goToCreatePage (Model model) {
+        model.addAttribute ("book", new Book ());
         return "createbooks";
     }
 
     @PostMapping("/save")
-    public String createBooks(@ModelAttribute("book") Book book, Model model) {
-        if (!checkCreateBookAttributes(book, model)) {
+    public String createBooks (@ModelAttribute("book") Book book, Model model) {
+        if (!checkCreateBookAttributes (book, model)) {
             return "createbooks";
         }
-        bookService.createBook(book);
-        List<Book> books = bookService.getBooks();
-        model.addAttribute("book", books);
+        bookService.createBook (book);
+        List<Book> books = bookService.getBooks ();
+        model.addAttribute ("book", books);
 
         return "books";
     }
 
-    private boolean checkCreateBookAttributes(Book book, Model model) {
+    private boolean checkCreateBookAttributes (Book book, Model model) {
         boolean isValidAttribute = true;
+
         if (Strings.isBlank(book.getName())) {
             model.addAttribute("nameErrorMessage", "Invalid Book Name");
+
             isValidAttribute = false;
         }
-        if (book.getAuthor() == null || book.getAuthor().trim().isEmpty()) {
-            model.addAttribute("authorErrorMessage", "Invalid Author Name");
+        if (book.getAuthor () == null || book.getAuthor ().trim ().isEmpty ()) {
+            model.addAttribute ("authorErrorMessage", "Invalid Author Name");
             isValidAttribute = false;
         }
-        if (book.getGenre() == null || book.getGenre().trim().isEmpty()) {
-            model.addAttribute("genreErrorMessage", "Invalid Genre Name");
+        if (book.getGenre () == null || book.getGenre ().trim ().isEmpty ()) {
+            model.addAttribute ("genreErrorMessage", "Invalid Genre Name");
             isValidAttribute = false;
         }
-        if (book.getYearOfPublish() == 0 || book.getYearOfPublish() < 0) {
-            model.addAttribute("yearOfPublishErrorMessage", "Invalid Year Of Publish");
+        if (book.getYearOfPublish () == 0 || book.getYearOfPublish () < 0) {
+            model.addAttribute ("yearOfPublishErrorMessage", "Invalid Year Of Publish");
             isValidAttribute = false;
         }
         return isValidAttribute;
     }
 
     @GetMapping("/mybooks")
-    public String getMyBooks(Model model){
+    public String getMyBooks (Model model) {
         try {
+
             Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
             Set<Book> books = bookService.getMyBooks(loggedInUser.getName());
             model.addAttribute("myBook", books);
+
         } catch (NoBooksAvailableException exception) {
-            model.addAttribute("errorMessage",exception.getMessage());
+            model.addAttribute ("errorMessage", exception.getMessage ());
         }
         return "myBooks";
     }
