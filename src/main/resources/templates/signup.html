@@ -55,17 +55,21 @@ input[type=submit]:hover {
   background-color: #f2f2f2;
   padding: 20px;
 }
-
-.col-25 {
-  float: left;
-  width: 25%;
-  margin-top: 6px;
+/* Style the top navigation bar */
+.topnav {
+  overflow: hidden;
+  background:#1abc9c;
 }
 
-.col-75 {
+/* Style the topnav links */
+.topnav a {
+  font-family: Arial, Helvetica, sans-serif;
   float: left;
-  width: 75%;
-  margin-top: 6px;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
 }
 
 /* Clear floats after the columns */
@@ -89,6 +93,14 @@ input[type=submit]:hover {
     <title>Signup</title>
 </head>
 <body>
+
+<div class="topnav">
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/books/list}">List Books</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+</div>
+
 <div align="center">
     <div class="header">
         <h1>User Registration</h1>
