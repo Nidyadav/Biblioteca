@@ -68,7 +68,8 @@ public class HomeController {
             isValidAttribute = false;
 
         }else{
-            String regex ="^(.+)@(.+)$";
+            //String regex ="^(.+)@(.+)$";
+            String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[com]$";
             Pattern pattern=Pattern.compile(regex);
             Matcher matcher=pattern.matcher(user.getEmail());
             model.addAttribute("emailErrorMessage", "Please enter valid email.");

@@ -41,7 +41,7 @@ class HomeControllerTest extends ControllerTestHelper {
                         .param("password", "abc"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("user"))
-                .andExpect(MockMvcResultMatchers.view().name("index"));
+                .andExpect(MockMvcResultMatchers.view().name("successfulsignup"));
         verify(userService, times(1)).save("mickey", "mouse", "abc@gmail.com", "abc");
     }
 
@@ -64,8 +64,8 @@ class HomeControllerTest extends ControllerTestHelper {
     void shouldNotCreateNewUserWithInvalidEmailId_1() throws Exception {
 
         mockMvc.perform(post("/addUser")
-                        .param("firstname", "mickey")
-                        .param("lastname", "mouse")
+                        .param("firstName", "mickey")
+                        .param("lastName", "mouse")
                         .param("email", "abc")
                         .param("password", "abcd"))
                 .andExpect(status().isOk())
@@ -78,8 +78,8 @@ class HomeControllerTest extends ControllerTestHelper {
     void shouldNotCreateNewUserWithInvalidEmailId_2() throws Exception {
 
         mockMvc.perform(post("/addUser")
-                        .param("firstname", "mickey")
-                        .param("lastname", "mouse")
+                        .param("firstName", "mickey")
+                        .param("lastName", "mouse")
                         .param("email", "abc@gmail")
                         .param("password", "abcd"))
                 .andExpect(status().isOk())
@@ -91,8 +91,8 @@ class HomeControllerTest extends ControllerTestHelper {
     void shouldNotCreateNewUserWithInvalidEmailId_3() throws Exception {
 
         mockMvc.perform(post("/addUser")
-                        .param("firstname", "mickey")
-                        .param("lastname", "mouse")
+                        .param("firstName", "mickey")
+                        .param("lastName", "mouse")
                         .param("email", "abc.com")
                         .param("password", "abcd"))
                 .andExpect(status().isOk())
