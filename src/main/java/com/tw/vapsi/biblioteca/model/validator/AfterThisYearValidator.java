@@ -15,7 +15,7 @@ public class AfterThisYearValidator implements ConstraintValidator<After1800AndB
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        return (value >= 1800 && value <= (calendar.get(Calendar.YEAR)));
+        return value != null && (value >= 1800 && value <= (calendar.get(Calendar.YEAR)));
     }
 
 }

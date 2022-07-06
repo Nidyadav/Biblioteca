@@ -14,8 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -72,8 +74,8 @@ public class BooksController {
     }
 
     @PostMapping("/save")
-    public String createBooks (@ModelAttribute("book") Book book, Model model) {
-        if (!checkCreateBookAttributes (book, model)) {
+    public String createBooks (@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()){
             return "createbooks";
         }
         bookService.createBook (book);
@@ -81,29 +83,6 @@ public class BooksController {
         model.addAttribute ("book", books);
 
         return "books";
-    }
-
-    private boolean checkCreateBookAttributes (Book book, Model model) {
-        boolean isValidAttribute = true;
-
-        if (Strings.isBlank(book.getName())) {
-            model.addAttribute("nameErrorMessage", "Invalid Book Name");
-
-            isValidAttribute = false;
-        }
-        if (book.getAuthor () == null || book.getAuthor ().trim ().isEmpty ()) {
-            model.addAttribute ("authorErrorMessage", "Invalid Author Name");
-            isValidAttribute = false;
-        }
-        if (book.getGenre () == null || book.getGenre ().trim ().isEmpty ()) {
-            model.addAttribute ("genreErrorMessage", "Invalid Genre Name");
-            isValidAttribute = false;
-        }
-        if (book.getYearOfPublish () == 0 || book.getYearOfPublish () < 0) {
-            model.addAttribute ("yearOfPublishErrorMessage", "Invalid Year Of Publish");
-            isValidAttribute = false;
-        }
-        return isValidAttribute;
     }
 
     @GetMapping("/mybooks")

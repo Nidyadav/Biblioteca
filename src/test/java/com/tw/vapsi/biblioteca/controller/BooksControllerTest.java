@@ -99,10 +99,10 @@ class BooksControllerTest extends ControllerTestHelper {
                         .param("genre","   ")
                         .param("yearOfPublish","0"))
                 .andExpect(MockMvcResultMatchers.view().name("createbooks"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("nameErrorMessage"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("authorErrorMessage"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("genreErrorMessage"))
-                .andExpect(MockMvcResultMatchers.model().attributeExists("yearOfPublishErrorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("book","name","NotBlank"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("book","author","NotBlank"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("book","genre","NotBlank"))
+                .andExpect(MockMvcResultMatchers.model().attributeHasFieldErrorCode("book","yearOfPublish","After1800AndBeforeNextYear"))
                 .andExpect(status().isOk());
     }
 

@@ -13,13 +13,13 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotBlank(message = "Book Name can not be blank")
+    @NotBlank(message = "Invalid Book name")
     private String name;
 
-    @NotBlank(message = "Author Name can not be blank")
+    @NotBlank(message = "Invalid Author name")
     private String author;
 
-    @NotBlank(message = "Genre Name can not be blank")
+    @NotBlank(message = "Invalid Genre name")
     @Column(name="genere")
     private String genre;
 
@@ -29,7 +29,7 @@ public class Book {
     private boolean isAvailable = true;
 
 
-    @After1800AndBeforeNextYear(message = "Invalid year of publish")
+    @After1800AndBeforeNextYear(message = "Year should be greater than 1800 and till current year")
     @Column(name="yearofpublish")
     private Integer yearOfPublish;
 

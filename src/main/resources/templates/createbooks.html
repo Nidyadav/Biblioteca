@@ -115,14 +115,17 @@ input[type=submit]:hover {
 
 
     <form th:action="@{/books/save}" th:object="${book}" method="post">
-        <p th:text="${nameErrorMessage}" style="color:red"></p>
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color:red"></p>
         <label>Book Name: </label><input id="bookDetail" type="text" th:field="*{name}" value=" "/><br/>
-        <p th:text="${authorErrorMessage}" style="color:red"></p>
-        <label>Author: </label><input id="bookAuthor" type="text" th:field="*{author}" value=" "/><br/>
-        <p th:text="${genreErrorMessage}" style="color:red"></p>
-        <label>Genre: </label><input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
-        <p th:text="${yearOfPublishErrorMessage}" style="color:red"></p>
-        <label>Year Of Publishing: </label><input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}"
+        <p th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:red"></p>
+        <label>Author: </label>
+        <input id="bookAuthor" type="text" th:field="*{author}" value=" "/><br/>
+        <p th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" style="color:red"></p>
+        <label>Genre: </label>
+        <input id="bookGenre" type="text" th:field="*{genre}" value=" "/><br/>
+        <p th:if="${#fields.hasErrors('yearOfPublish')}" th:errors="*{yearOfPublish}" style="color:red"></p>
+        <label>Year Of Publishing: </label>
+        <input id="bookYear" type="number" min="0" th:field="*{yearOfPublish}"
                                                   value=" "/><br/>
         <p></p>
         <input type="submit" value="Submit"/>
