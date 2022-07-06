@@ -23,7 +23,7 @@ public class Book {
     @Column(name="genere")
     private String genre;
 
-    private int quantity;
+    private int quantity = 1;
 
     @Column(name="isavailable")
     private boolean isAvailable = true;

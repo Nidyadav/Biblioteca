@@ -71,14 +71,12 @@
 <span th:if="${myBook != null}">
 <table border="1">
   <tr>
-    <th>Id</th>
     <th>Name</th>
     <th>Author</th>
     <th>Year of Publication</th>
     <th>Return</th>
   </tr>
   <tr th:each="b: ${myBook}">
-    <td th:text="${b.id}"></td>
     <td th:text="${b.name}"></td>
     <td th:text="${b.author}"></td>
     <td th:text="${b.yearOfPublish}"></td>
