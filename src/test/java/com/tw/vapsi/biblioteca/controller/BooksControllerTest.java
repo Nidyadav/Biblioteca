@@ -8,6 +8,7 @@ import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
+import com.tw.vapsi.biblioteca.model.User;
 import com.tw.vapsi.biblioteca.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +161,8 @@ class BooksControllerTest extends ControllerTestHelper {
     void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableToCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General",0, false,1865);
         book.setId(1L);
-        BookNotAvailableForCheckOutException bookNotAvailableForCheckOutException = new BookNotAvailableForCheckOutException("Book: \""+book.getName()+"\" Not Available For Checkout.");
+        BookNotAvailableForCheckOutException bookNotAvailableForCheckOutException =
+                new BookNotAvailableForCheckOutException("Book: \""+book.getName()+"\" Not Available For Checkout.");
         when(bookService.checkOutBook(1L,"admin@gmail.com")).thenThrow(bookNotAvailableForCheckOutException);
 
         mockMvc.perform(get("/books/checkout/1"))
@@ -227,7 +229,7 @@ class BooksControllerTest extends ControllerTestHelper {
     void shouldSeeMessageWhenNoBooksCheckedOutByUser() throws Exception {
         Set<Book> books = new HashSet<>();
         NoBooksAvailableException noBooksAvailableException = new NoBooksAvailableException("No Books Available to display");
-        //when(bookService.getMyBooks("user1")).thenReturn(books);
+        when(bookService.getMyBooks("user1")).thenReturn(books);
         when(bookService.getMyBooks("user1")).thenThrow(noBooksAvailableException);
 
         mockMvc.perform(get("/books/mybooks"))
@@ -280,5 +282,34 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.view().name("mybooks"));
 
         verify(bookService, times(1)).returnCheckOutBook(1,"admin");
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
+    void shouldReturnAllBooksCheckedOutByTheUser() throws Exception {
+        Book book = new Book("War and Peace", "Tolstoy, Leo",
+                "General",1, true,1865);
+        book.setUser(new User("admin","A","admin@gmail.com","abc"));
+        List<Book> bookList = Collections.singletonList(book);
+        when(bookService.getAllCheckedOutBooks()).thenReturn(bookList);
+
+        mockMvc.perform(get("/books/allcheckedOutBooks"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("book"))
+                .andExpect(MockMvcResultMatchers.view().name("allcheckedoutbooks"));
+
+        verify(bookService, times(1)).getAllCheckedOutBooks();
+    }
+
+    @Test
+    @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
+    void shouldShowMessageWhenNoBooksCheckedOut() throws Exception {
+        when(bookService.getAllCheckedOutBooks()).thenThrow(new NoBooksAvailableException("No books checked out by user"));
+
+        mockMvc.perform(get("/books/allcheckedOutBooks"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.view().name("allcheckedoutbooks"));
+        verify(bookService, times(1)).getAllCheckedOutBooks();
     }
 }

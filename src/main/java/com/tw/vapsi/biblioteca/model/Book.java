@@ -33,6 +33,15 @@ public class Book {
     @Column(name="yearofpublish")
     private Integer yearOfPublish;
 
+    @ManyToOne
+    @JoinTable(name = "borrowed_books",
+            joinColumns = {@JoinColumn(name = "book_id", insertable = false,
+                    updatable = false, referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id", insertable = false,
+                    updatable = false, referencedColumnName = "id")}
+    )
+    private User user;
+
     public Book() {
     }
 
@@ -112,5 +121,13 @@ public class Book {
 
     public void setYearOfPublish(Integer yearOfPublish) {
         this.yearOfPublish = yearOfPublish;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

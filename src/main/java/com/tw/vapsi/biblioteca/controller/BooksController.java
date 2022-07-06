@@ -7,7 +7,6 @@ import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
 import com.tw.vapsi.biblioteca.service.BookService;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -117,5 +116,16 @@ public class BooksController {
             model.addAttribute(ERROR_MESSAGE,bookAlreadyReturnedException.getMessage());
         }
         return getMyBooks(model);
+    }
+
+    @GetMapping("/allcheckedOutBooks")
+    public String getAllCheckedOutBooks(Model model){
+        try {
+            List<Book> bookList = bookService.getAllCheckedOutBooks();
+            model.addAttribute ("book", bookList);
+        } catch (NoBooksAvailableException exception) {
+            model.addAttribute(ERROR_MESSAGE,exception.getMessage());
+        }
+        return "allcheckedoutbooks";
     }
 }

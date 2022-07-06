@@ -265,4 +265,30 @@ class BookServiceTest {
         assertThrows(BookAlreadyReturnedException.class, () -> bookService.returnCheckOutBook(1L, "admin@gmail.com"));
     }
 
+    @Test
+    void shouldReturnAllCheckedOutBooksForLibrarian() throws NoBooksAvailableException {
+        List<Book> listOfBooks =new ArrayList<>();
+
+        Book warBook = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
+        Book janeBook = new Book("Northanger Abbey", "Austen, Jane", "General", 1, true, 1814);
+        warBook.setUser(new User("admin","a","admin@gmail.com","abc"));
+        janeBook.setUser(new User("admin","a","admin@gmail.com","abc"));
+        listOfBooks.add(warBook);
+        listOfBooks.add(janeBook);
+        when(booksRepository.findAll()).thenReturn(listOfBooks);
+
+        List<Book> books = bookService.getAllCheckedOutBooks();
+
+        verify(booksRepository, times(1)).findAll();
+        assertEquals(listOfBooks, books);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenNoBooksAreCheckedOut()  {
+        when(booksRepository.findAll()).thenReturn(new ArrayList<>());
+
+        assertThrows(NoBooksAvailableException.class,()->bookService.getAllCheckedOutBooks());
+
+        verify(booksRepository, times(1)).findAll();
+    }
 }

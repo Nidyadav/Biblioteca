@@ -72,7 +72,7 @@ public class BookService {
                 userRepository.findByEmail(userEmail).get().getUserId()).get();
         Set<Book> checkedOutBooks =user.getBooks();
         if (checkedOutBooks.size()==0) {
-            throw new NoBooksAvailableException("No books checked by the user.");
+            throw new NoBooksAvailableException("No books checked out by the user.");
         }
         return checkedOutBooks;
     }
@@ -87,5 +87,14 @@ public class BookService {
         book.setAvailable(true);
         return booksRepository.save(book);
 
+    }
+
+    public List<Book> getAllCheckedOutBooks() throws NoBooksAvailableException {
+        List<Book> books = booksRepository.findAll();
+        books.removeIf(book -> book.getUser()==null);
+        if (books.isEmpty()) {
+            throw new NoBooksAvailableException("No books checked out by the user");
+        }
+        return books;
     }
 }
