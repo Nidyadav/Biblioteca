@@ -155,7 +155,7 @@ class BooksControllerTest extends ControllerTestHelper {
 
         mockMvc.perform(get("/books/mybooks"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("myBooks"))
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("myBook"));
 
         verify(bookService, times(1)).getMyBooks("user1");
@@ -174,7 +174,7 @@ class BooksControllerTest extends ControllerTestHelper {
 
         mockMvc.perform(get("/books/mybooks"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("myBooks"))
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("myBook"));
 
         assertEquals(5,books.size());
@@ -191,7 +191,7 @@ class BooksControllerTest extends ControllerTestHelper {
 
         mockMvc.perform(get("/books/mybooks"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("myBooks"))
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"));
 
         verify(bookService, times(1)).getMyBooks("user1");
@@ -219,7 +219,7 @@ class BooksControllerTest extends ControllerTestHelper {
 
         mockMvc.perform(get("/books/returnbook/1"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.view().name("myBooks"))
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
                 .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookAlreadyReturnedException.getMessage()));
 
@@ -236,7 +236,7 @@ class BooksControllerTest extends ControllerTestHelper {
         mockMvc.perform(get("/books/returnbook/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("successCheckoutMessage"))
-                .andExpect(MockMvcResultMatchers.view().name("myBooks"));
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"));
 
         verify(bookService, times(1)).returnCheckOutBook(1,"admin");
     }

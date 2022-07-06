@@ -117,7 +117,7 @@ public class BooksController {
         } catch (NoBooksAvailableException exception) {
             model.addAttribute ("errorMessage", exception.getMessage ());
         }
-        return "myBooks";
+        return "mybooks";
     }
     @GetMapping("/returnbook/{id}")
     public String returnCheckOutBook(@PathVariable("id") long bookId, Model model)
