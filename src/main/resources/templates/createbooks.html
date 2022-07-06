@@ -100,18 +100,19 @@ input[type=submit]:hover {
     </style>
 </head>
 <body>
+<div class="topnav">
+    <a th:href="@{/books/list}">List Books</a>
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 
+</div>
 <div align="center">
     <div class="header">
         <h1>Create Book</h1>
         <p></p>
     </div>
 
-    <div class="topnav">
-        <a th:href="@{/books/list}">List Books</a>
-        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 
-    </div>
     <form th:action="@{/books/save}" th:object="${book}" method="post">
         <p th:text="${nameErrorMessage}" style="color:red"></p>
         <label>Book Name: </label><input id="bookDetail" type="text" th:field="*{name}" value=" "/><br/>

@@ -50,23 +50,26 @@
   color: black;
 }
 
+
     </style>
     <meta charset="UTF-8">
     <title>Books</title>
 </head>
 <body>
+<div class="topnav">
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+</div>
 <div align="center">
     <div class="header">
         <h1>List of Books</h1>
         <p></p>
     </div>
 </div>
-<div class="topnav">
-    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
-    <a sec:authorize="isAuthenticated()"th:href="@{/books/mybooks}">My Books</a>
-    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
-    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
-</div>
+
 
 <div>
     <p th:text="${successCheckoutMessage}" style="color:green"></p>
@@ -117,6 +120,7 @@ if(message!=null){
     }
 }
 window.onload = codeAddress;
+
 </script>
 </body>
 </html>

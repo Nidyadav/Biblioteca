@@ -55,6 +55,11 @@
     </style>
 </head>
 <body>
+<div class="topnav">
+    <a th:href="@{/books/list}">List Books</a>
+    <a th:href="@{/}">Home</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+</div>
 <div align="center">
     <div class="header">
         <h1>My Books</h1>
@@ -62,10 +67,6 @@
     </div>
 </div>
 
-<div class="topnav">
-    <a th:href="@{/books/list}">List Books</a>
-    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
-</div>
 <p th:text="${errorMessage}" style="color:red"></p>
 <span th:if="${myBook != null}">
 <table border="1">

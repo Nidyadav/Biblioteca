@@ -19,7 +19,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   color: white;
   text-align: center;
-  font-size: 30px;
+  font-size: 15px;
 }
 
 /* Style the top navigation bar */
@@ -88,6 +88,13 @@ input[type=text], select, textarea {
     </style>
 </head>
 <body>
+<div class="topnav">
+    <a th:href="@{/books/list}">List Books</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/signup}" style="float:right">Signup</a>
+</div>
 <div class="containerImage">
     <img th:src="@{/images/libarary4.webp}" style="width:1800px;height:250px" alt="Welcome image"/>
     <div class="text-block">
@@ -96,13 +103,7 @@ input[type=text], select, textarea {
     </div>
 </div>
 
-<div class="topnav">
-    <a th:href="@{/books/list}">List Books</a>
-    <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
-    <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
-    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
-    <a sec:authorize="!isAuthenticated()" th:href="@{/signup}" style="float:right">Signup</a>
-</div>
+
 
 <div type="text">
 
