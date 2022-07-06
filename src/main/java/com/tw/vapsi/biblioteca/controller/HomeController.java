@@ -61,25 +61,29 @@ public class HomeController {
 
         if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
             model.addAttribute("lastnameErrorMessage", "Last Name cannot be empty");
-            isValidAttribute = false;
+                isValidAttribute = false;
         }
 
         if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
             model.addAttribute("emailErrorMessage", "Email cannot be empty");
-            isValidAttribute = false;
+                isValidAttribute = false;
 
         }else{
-            //String regex ="^(.+)@(.+)$";
+
             String regex = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[com]$";
             Pattern pattern=Pattern.compile(regex);
             Matcher matcher=pattern.matcher(user.getEmail());
-            model.addAttribute("emailErrorMessage", "Please enter valid email.");
-            isValidAttribute = matcher.matches();
+
+            if(!matcher.matches()) {
+                model.addAttribute("emailErrorMessage", "Please enter valid email.");
+                isValidAttribute = matcher.matches();
+            }
         }
 
         if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
             model.addAttribute("passwordErrorMessage", "Password cannot be empty");
             isValidAttribute = false;
+
         }
         return isValidAttribute;
     }
