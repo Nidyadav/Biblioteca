@@ -10,7 +10,7 @@ workflows:
          - build
       - deployToStage:
          requires:
-         -build
+         - build
          - test
 
 #      - hold:
