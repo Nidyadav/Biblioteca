@@ -17,11 +17,11 @@ workflows:
 #          requires:
 #            - build
 #            - test
-      - deployToProduction:
-          type: approval
-          requires:
-            - build
-            - test
+#      - deployToProduction:
+#          type: approval
+#          requires:
+#            - build
+#            - test
 
 
 jobs:
@@ -72,22 +72,22 @@ jobs:
               HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateama web
               HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateama web
 
-  deployToProduction:
-    docker: #executor: type
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.14
-      - attach_workspace:
-          at: ./
-      #        - run: docker build -f Dockerfile . -t teama
-      - run:
-          name: Build and push Docker image to Heroku to production
-          command: |
-            set -x
-            sudo curl https://cli-assets.heroku.com/install.sh | sh
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateamaproduction web
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateamaproduction web
+#  deployToProduction:
+#    docker: #executor: type
+#      - image: circleci/openjdk:8-jdk
+#    steps:
+#      - checkout
+#      - setup_remote_docker:
+#          version: 20.10.14
+#      - attach_workspace:
+#          at: ./
+#      #        - run: docker build -f Dockerfile . -t teama
+#      - run:
+#          name: Build and push Docker image to Heroku to production
+#          command: |
+#            set -x
+#            sudo curl https://cli-assets.heroku.com/install.sh | sh
+#            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+#            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateamaproduction web
+#            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateamaproduction web
 
