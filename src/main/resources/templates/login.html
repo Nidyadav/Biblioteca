@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <style>
     {
@@ -116,6 +117,7 @@ input[type=submit]:hover {
 <span>
 <div class="topnav">
     <a th:href="@{/}">Home</a>
+    <a sec:authorize="!isAuthenticated()" th:href="@{/signup}" style="float:right">Signup</a>
 </div>
 </span>
 
