@@ -272,7 +272,6 @@ class BookServiceTest {
         Book warBook = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
         Book janeBook = new Book("Northanger Abbey", "Austen, Jane", "General", 1, true, 1814);
         warBook.setUser(new User("admin","a","admin@gmail.com","abc"));
-        janeBook.setUser(new User("admin","a","admin@gmail.com","abc"));
         listOfBooks.add(warBook);
         listOfBooks.add(janeBook);
         when(booksRepository.findAll()).thenReturn(listOfBooks);
