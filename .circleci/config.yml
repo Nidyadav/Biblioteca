@@ -88,6 +88,6 @@ jobs:
             set -x
             sudo curl https://cli-assets.heroku.com/install.sh | sh
             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecaproductionteama web
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecaproductionteama web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateamaproduction web
+            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateamaproduction web
 
