@@ -81,7 +81,7 @@ jobs:
             name: Build and push Docker image to Heroku Production
             command: |
              set -x
-            sudo curl https://cli-assets.heroku.com/install.sh | sh
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecaproductionteama web
-            HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecaproductionteama web
+             sudo curl https://cli-assets.heroku.com/install.sh | sh
+             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecaproductionteama web
+             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecaproductionteama web
