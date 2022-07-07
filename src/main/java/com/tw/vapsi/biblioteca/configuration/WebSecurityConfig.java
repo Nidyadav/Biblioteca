@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/books/create").hasAnyAuthority("LIBRARIAN")
                 .antMatchers("/books/save").hasAnyAuthority("LIBRARIAN")
+                .antMatchers("/books/allcheckedOutBooks").hasAnyAuthority("LIBRARIAN")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

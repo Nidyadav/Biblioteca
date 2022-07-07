@@ -118,6 +118,7 @@ public class BooksController {
         return getMyBooks(model);
     }
 
+    @PreAuthorize("hasRole('LIBRARIAN')")
     @GetMapping("/allcheckedOutBooks")
     public String getAllCheckedOutBooks(Model model){
         try {
