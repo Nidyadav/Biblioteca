@@ -11,15 +11,15 @@ workflows:
       - deployToStage:
          requires:
          - test
+
+#      - hold:
+#          type: approval
+#          requires:
+#            - build
+#            - test
 #      - deployToProduction:
-      - hold:
-          type: approval
-          requires:
-            - build
-            - test
-      - deployToProduction:
-        requires:
-          - hold
+#        requires:
+#          - hold
 
 jobs:
   build:
@@ -68,20 +68,20 @@ jobs:
               HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
               HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecateama web
               HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecateama web
-    deployToProduction:
-      docker: # executor type
-        - image: circleci/openjdk:8-jdk
-      steps :
-        - checkout
-        - setup_remote_docker:
-            version: 20.10.14
-        - attach_workspace:
-            at: ./
-        - run:
-            name: Build and push Docker image to Heroku Production
-            command: |
-             set -x
-             sudo curl https://cli-assets.heroku.com/install.sh | sh
-             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
-             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecaproductionteama web
-             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecaproductionteama web
+#    deployToProduction:
+#      docker: # executor type
+#        - image: circleci/openjdk:8-jdk
+#      steps :
+#        - checkout
+#        - setup_remote_docker:
+#            version: 20.10.14
+#        - attach_workspace:
+#            at: ./
+#        - run:
+#            name: Build and push Docker image to Heroku Production
+#            command: |
+#             set -x
+#             sudo curl https://cli-assets.heroku.com/install.sh | sh
+#             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:login
+#             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:push -a bibliotecaproductionteama web
+#             HEROKU_API_KEY=${HEROKU_API_KEY} heroku container:release -a bibliotecaproductionteama web
