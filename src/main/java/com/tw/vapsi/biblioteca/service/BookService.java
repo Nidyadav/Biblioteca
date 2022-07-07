@@ -1,9 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
-import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
-import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
-import com.tw.vapsi.biblioteca.exception.InvalidUserException;
-import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.*;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
@@ -50,7 +47,7 @@ public class BookService {
         Optional<Book> bookOptional = booksRepository.findById(bookId);
         Optional<User> userOptional = userRepository.findByEmail(userEmail);
         if (!bookOptional.isPresent())
-            throw new BookNotAvailableForCheckOutException("Book Not Found");
+            throw new BookNotFoundException("Book Not Found");
         if (!userOptional.isPresent())
             throw new InvalidUserException("Invalid User");
         Book book = bookOptional.get();
@@ -78,8 +75,14 @@ public class BookService {
     }
 
     public Book returnCheckOutBook(long bookId, String userEmail) {
-        User user = userRepository.findByEmail(userEmail).get();
-        Book book = booksRepository.findById(bookId).get();
+        Optional<User> userOptional = userRepository.findByEmail(userEmail);
+        Optional<Book> bookOptional = booksRepository.findById(bookId);
+        if (!bookOptional.isPresent())
+            throw new BookNotFoundException("Book Not Found");
+        if (!userOptional.isPresent())
+            throw new InvalidUserException("Invalid User");
+        User user = userOptional.get();
+        Book book = bookOptional.get();
         if(book.isAvailable())
             throw new BookAlreadyReturnedException("Book "+book.getName()+" is already returned");
         user.getBooks().remove(book);

@@ -1,9 +1,6 @@
 package com.tw.vapsi.biblioteca.service;
 
-import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
-import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
-import com.tw.vapsi.biblioteca.exception.InvalidUserException;
-import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.*;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
@@ -15,15 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 class BookServiceTest {
@@ -142,11 +136,11 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionIfBookIdIsNotValid(){
-        assertThrows(BookNotAvailableForCheckOutException.class, () -> bookService.checkOutBook(6L, "admin@gmail.com"));
+    void shouldThrowExceptionIfBookIdIsNotValidWhenCheckOut(){
+        assertThrows(BookNotFoundException.class, () -> bookService.checkOutBook(6L, "admin@gmail.com"));
     }
     @Test
-    void shouldThrowExceptionIfUserIsNotValid(){
+    void shouldThrowExceptionIfUserIsNotValidWhenCheckOut(){
         Book book = new Book("War and Peace1", "Tolstoy, Leo","General", 1, false, 1865);
         book.setId(1L);
         when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
@@ -200,7 +194,6 @@ class BookServiceTest {
 
     @Test
     void shouldGiveTheNameOfBookAndSuccessMessageOnReturn() throws Exception {
-
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, false, 1865);
         book.setId(1L);
         Book returnedBook = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
@@ -220,8 +213,6 @@ class BookServiceTest {
         verify(userRepository, times(1)).save(user);
         assertEquals(0, userRepository.findByEmail("admin@gmail.com").get().getBooks().size());
         assertFalse(userRepository.findByEmail("admin@gmail.com").get().getBooks().contains(book));
-
-
     }
 
 
@@ -289,5 +280,18 @@ class BookServiceTest {
         assertThrows(NoBooksAvailableException.class,()->bookService.getAllCheckedOutBooks());
 
         verify(booksRepository, times(1)).findAll();
+    }
+
+    @Test
+    void shouldThrowExceptionIfBookIdIsNotValidWhenReturningBook(){
+        assertThrows(BookNotFoundException.class, () -> bookService.returnCheckOutBook(6L, "admin@gmail.com"));
+    }
+    @Test
+    void shouldThrowExceptionIfUserIsNotValidWhenReturningBook(){
+        Book book = new Book("War and Peace1", "Tolstoy, Leo","General", 1, false, 1865);
+        book.setId(1L);
+        when(booksRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        assertThrows(InvalidUserException.class, () -> bookService.returnCheckOutBook(1L, "admin@gmail.com"));
     }
 }

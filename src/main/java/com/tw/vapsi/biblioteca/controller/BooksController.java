@@ -58,8 +58,8 @@ public class BooksController {
             Book book = bookService.checkOutBook(bookId, loggedInUser.getName());
             model.addAttribute(SUCCESS_MESSAGE, "Book: \"" + book.getName() + "\" Checkedout Successfully");
         }
-        catch(BookCheckOutException bookCheckOutException){
-            model.addAttribute(ERROR_MESSAGE,bookCheckOutException.getMessage());
+        catch(Exception exception){
+            model.addAttribute(ERROR_MESSAGE,exception.getMessage());
             return books(model);
         }
         return books(model);
@@ -112,8 +112,8 @@ public class BooksController {
             Book returnedBook = bookService.returnCheckOutBook(bookId, loggedInUser.getName());
             model.addAttribute(SUCCESS_MESSAGE, "Book: \"" + returnedBook.getName() + "\" Returned Successfully");
         }
-        catch(BookAlreadyReturnedException bookAlreadyReturnedException){
-            model.addAttribute(ERROR_MESSAGE,bookAlreadyReturnedException.getMessage());
+        catch(Exception exception){
+            model.addAttribute(ERROR_MESSAGE,exception.getMessage());
         }
         return getMyBooks(model);
     }

@@ -2,9 +2,7 @@ package com.tw.vapsi.biblioteca.controller;
 
 
 import com.tw.vapsi.biblioteca.controller.helper.ControllerTestHelper;
-import com.tw.vapsi.biblioteca.exception.BookAlreadyExistsException;
-import com.tw.vapsi.biblioteca.exception.BookAlreadyReturnedException;
-import com.tw.vapsi.biblioteca.exception.NoBooksAvailableException;
+import com.tw.vapsi.biblioteca.exception.*;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.BookNotAvailableForCheckOutException;
 import com.tw.vapsi.biblioteca.exception.bookcheckout.MaximumBooksCheckedOutException;
 import com.tw.vapsi.biblioteca.model.Book;
@@ -63,7 +61,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "LIBRARIAN" })
     void shouldRedirectToCreatePage() throws Exception {
         mockMvc.perform(get("/books/create"))
                 .andExpect(status().isOk())
@@ -72,7 +70,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "LIBRARIAN" })
     void shouldBeAbleToSaveTheBook() throws Exception {
         Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
                 "General",1, true,1865);
@@ -92,7 +90,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "LIBRARIAN" })
     void shouldBeAbleToSaveTheBookButUnableToView() throws Exception {
         Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
                 "General",1, true,1865);
@@ -112,7 +110,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "LIBRARIAN" })
     void shouldThrowExceptionWhenBookNameAndYearAlreadyExistsInSystem() throws Exception {
         Book bookToBeAdded = new Book("War and Peace", "Tolstoy, Leo",
                 "General",1, true,1865);
@@ -132,7 +130,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = { "LIBRARIAN" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "LIBRARIAN" })
     void shouldThrowExceptionForInvalidAttributeToSaveBook() throws Exception {
 
         mockMvc.perform(post("/books/save")
@@ -159,7 +157,7 @@ class BooksControllerTest extends ControllerTestHelper {
     @Test
     @WithMockUser(username = "admin@gmail.com", authorities = { "USER" })
     void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableToCheckout() throws Exception {
-        Book book = new Book("War and Peace", "Tolstoy, Leo", "General",0, false,1865);
+        Book book = new Book("War and Peace", "Tolstoy, Leo", "General",1, false,1865);
         book.setId(1L);
         BookNotAvailableForCheckOutException bookNotAvailableForCheckOutException =
                 new BookNotAvailableForCheckOutException("Book: \""+book.getName()+"\" Not Available For Checkout.");
@@ -171,22 +169,22 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
                 .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookNotAvailableForCheckOutException.getMessage()));
 
-        verify(bookService, times(0)).checkOutBook(1,"admin");
+        verify(bookService, times(1)).checkOutBook(1,"admin@gmail.com");
 
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"USER"})
+    @WithMockUser(username = "admin@gmail.com", authorities = {"USER"})
     void shouldRedirectToBooksPageOnSuccessfulCheckout() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, true, 1865);
-        when(bookService.checkOutBook(1L, "admin")).thenReturn(book);
+        when(bookService.checkOutBook(1L, "admin@gmail.com")).thenReturn(book);
 
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("successCheckoutMessage"))
                 .andExpect(MockMvcResultMatchers.view().name("books"));
 
-        verify(bookService, times(1)).checkOutBook(1,"admin");
+        verify(bookService, times(1)).checkOutBook(1,"admin@gmail.com");
     }
 
     @Test
@@ -239,17 +237,17 @@ class BooksControllerTest extends ControllerTestHelper {
 
         verify(bookService, times(1)).getMyBooks("user1");
     }
-    @WithMockUser(username = "admin", authorities = { "USER" })
+    @WithMockUser(username = "admin@gmail.com", authorities = { "USER" })
     void shouldRedirectToBooksPageWithErrorMessageIfUserReachesMaximumCheckoutLimit() throws Exception {
         MaximumBooksCheckedOutException maximumBooksCheckedOutException = new MaximumBooksCheckedOutException("You can check out "+ BookService.MAX_CHECK_OUT_BOOK_LIMIT +" maximum  books");
-        when(bookService.checkOutBook(1,"admin")).thenThrow(maximumBooksCheckedOutException);
+        when(bookService.checkOutBook(1,"admin@gmail.com")).thenThrow(maximumBooksCheckedOutException);
         mockMvc.perform(get("/books/checkout/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("books"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
                 .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",maximumBooksCheckedOutException.getMessage()));
 
-        verify(bookService, times(1)).checkOutBook(1,"admin");
+        verify(bookService, times(1)).checkOutBook(1,"admin@gmail.com");
 
     }
     @Test
@@ -271,21 +269,21 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"USER"})
+    @WithMockUser(username = "admin@gmail.com", authorities = {"USER"})
     void shouldRedirectToMyBooksPageOnSuccessfulReturn() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo", "General", 1, false, 1865);
-        when(bookService.returnCheckOutBook(1L, "admin")).thenReturn(book);
+        when(bookService.returnCheckOutBook(1L, "admin@gmail.com")).thenReturn(book);
 
         mockMvc.perform(get("/books/returnbook/1"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("successCheckoutMessage"))
                 .andExpect(MockMvcResultMatchers.view().name("mybooks"));
 
-        verify(bookService, times(1)).returnCheckOutBook(1,"admin");
+        verify(bookService, times(1)).returnCheckOutBook(1,"admin@gmail.com");
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
+    @WithMockUser(username = "admin@gmail.com", authorities = {"LIBRARIAN"})
     void shouldReturnAllBooksCheckedOutByTheUser() throws Exception {
         Book book = new Book("War and Peace", "Tolstoy, Leo",
                 "General",1, true,1865);
@@ -302,7 +300,7 @@ class BooksControllerTest extends ControllerTestHelper {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"LIBRARIAN"})
+    @WithMockUser(username = "admin@gmail.com", authorities = {"LIBRARIAN"})
     void shouldShowMessageWhenNoBooksCheckedOut() throws Exception {
         when(bookService.getAllCheckedOutBooks()).thenThrow(new NoBooksAvailableException("No books checked out by user"));
 
@@ -312,4 +310,38 @@ class BooksControllerTest extends ControllerTestHelper {
                 .andExpect(MockMvcResultMatchers.view().name("allcheckedoutbooks"));
         verify(bookService, times(1)).getAllCheckedOutBooks();
     }
+
+    @Test
+    @WithMockUser(username = "admin@gmail.com", authorities = { "USER" })
+    void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableWhenCheckout() throws Exception {
+        BookNotFoundException bookNotFoundException =
+                new BookNotFoundException("Book Not Found");
+        when(bookService.checkOutBook(1L,"admin@gmail.com")).thenThrow(bookNotFoundException);
+
+        mockMvc.perform(get("/books/checkout/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("books"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookNotFoundException.getMessage()));
+
+        verify(bookService, times(1)).checkOutBook(1,"admin@gmail.com");
+
+    }
+    @Test
+    @WithMockUser(username = "admin@gmail.com", authorities = { "USER" })
+    void shouldRedirectToBooksPageWithErrorMessageIfBookIsNotAvailableWhenReturn() throws Exception {
+        BookNotFoundException bookNotFoundException =
+                new BookNotFoundException("Book Not Found");
+        when(bookService.returnCheckOutBook(1L,"admin@gmail.com")).thenThrow(bookNotFoundException);
+
+        mockMvc.perform(get("/books/returnbook/1"))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("mybooks"))
+                .andExpect(MockMvcResultMatchers.model().attributeExists("errorMessage"))
+                .andExpect(MockMvcResultMatchers.model().attribute("errorMessage",bookNotFoundException.getMessage()));
+
+        verify(bookService, times(1)).returnCheckOutBook(1,"admin@gmail.com");
+
+    }
+
 }
