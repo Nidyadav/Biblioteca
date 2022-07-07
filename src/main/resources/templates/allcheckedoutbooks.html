@@ -57,7 +57,9 @@
 <span>
 <div class="topnav">
     <a th:href="@{/}">Home</a>
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
     <a th:href="@{/books/list}">List Books</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 </div>
 </span>

@@ -104,6 +104,8 @@ input[type=submit]:hover {
 <div class="topnav">
     <a th:href="@{/}">Home</a>
     <a th:href="@{/books/list}">List Books</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/allcheckedOutBooks}">User's Books</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
 
 </div>

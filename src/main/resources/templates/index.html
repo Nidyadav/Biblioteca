@@ -90,9 +90,10 @@ input[type=text], select, textarea {
 </head>
 <body>
 <div class="topnav">
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/create}">Add Book</a>
     <a th:href="@{/books/list}">List Books</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/books/mybooks}">My Books</a>
-    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/allcheckedOutBooks}">User Books</a>
+    <a sec:authorize="hasAnyAuthority('LIBRARIAN')" th:href="@{/books/allcheckedOutBooks}">User's Books</a>
     <a sec:authorize="!isAuthenticated()" th:href="@{/login}" style="float:right">Login</a>
     <a sec:authorize="isAuthenticated()" th:href="@{/logout}" style="float:right">Logout</a>
     <a sec:authorize="!isAuthenticated()" th:href="@{/signup}" style="float:right">Signup</a>
