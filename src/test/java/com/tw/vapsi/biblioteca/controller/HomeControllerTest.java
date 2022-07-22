@@ -24,7 +24,10 @@ class HomeControllerTest extends ControllerTestHelper {
     @Test
     void shouldShowWelcomeMessage() throws Exception {
         mockMvc.perform(get("/"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect (MockMvcResultMatchers.view ().name ("index"))
+                .andExpect (MockMvcResultMatchers.model ().attributeExists ("welcomeMessage"))
+                .andExpect (MockMvcResultMatchers.model ().attribute ("welcomeMessage","Welcome to Biblioteca. Your one-stop-shop for great book titles in Bangalore!"));
     }
 
     @Test
